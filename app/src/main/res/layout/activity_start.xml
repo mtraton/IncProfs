@@ -1,0 +1,46 @@
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".StartActivity" >
+
+<Button
+    android:id="@+id/go_button"
+    style="@style/AppTheme"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/surname_edit_text"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="22dp"
+    android:onClick="startQuiz"
+    android:background="@drawable/button"
+    android:text="@string/go_button_label" />
+
+<EditText
+    android:id="@+id/name_edit_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/surname_edit_text"
+    android:layout_alignParentTop="true"
+    android:layout_marginTop="39dp"
+    android:ems="10"
+    android:hint="@string/name_hint"
+    android:inputType="textPersonName" />
+<requestFocus />
+
+<EditText
+    android:id="@+id/surname_edit_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/name_edit_text"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="15dp"
+    android:ems="10"
+    android:hint="@string/surname_hint"
+    android:inputType="textPersonName" >
+
+
+</EditText>
+
+</RelativeLayout>
