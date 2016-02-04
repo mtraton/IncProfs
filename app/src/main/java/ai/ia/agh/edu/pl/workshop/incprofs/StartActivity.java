@@ -30,8 +30,23 @@ public class StartActivity extends Activity {
 
     //todo: wykrywaj, że baza danych z sensorów jest pusta lub nie ma nowych informacji do uczenia
 
+    public void startSensors() {
+        // SENSORY JAKO OBSERVERY?
+
+        // LOKALIZACJA UŻYTKOWNIKA
+        // AKTYWNOŚĆ UŻYTKOWNIKA
+        // APLIKACJE
+        // PORA DNIA
+        // SIEĆ WIFI DO KTÓREJ JEST PODŁĄCZONY
+        // ZUZYCIE BATERII
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+        // wystartuj wszystkie potrzebne sensory
+
         super.onCreate(savedInstanceState);
         Log.d("START", "On create activity!");
         /*Setting the layout*/
