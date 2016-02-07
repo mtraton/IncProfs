@@ -38,4 +38,3 @@ public class ApplicationListener extends BroadcastReceiver {
         //double latitude =  intent.getDoubleExtra("double_latitude", 180.0);; // // TODO: 04.02.2016  nie wiadomo czy tak się to nazywa
     }
 }
-

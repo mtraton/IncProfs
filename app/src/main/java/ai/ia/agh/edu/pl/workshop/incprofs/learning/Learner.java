@@ -31,12 +31,14 @@ public class Learner {
         this.streamFilePath = streamFilePath; // // TODO: 22.01.2016 może tu dostać nulla, obsłużyć 
         stream = new ArffFileStream(streamFilePath, -1);
         stream.prepareForUse();
+
     }
 
     public void prepareLearner() {
         learner = new HoeffdingTree();
         learner.setModelContext(stream.getHeader());
         learner.prepareForUse();
+
     }
 
     public Classifier learnOnStream() {

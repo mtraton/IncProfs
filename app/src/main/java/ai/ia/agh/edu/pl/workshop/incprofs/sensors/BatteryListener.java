@@ -10,6 +10,7 @@ import android.util.Log;
 import com.aware.providers.Battery_Provider;
 
 /**
+ * Cogito ergo sum
  * Created by Rael on 04.02.2016.
  */
 

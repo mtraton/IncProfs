@@ -21,6 +21,7 @@ import ai.ia.agh.edu.pl.workshop.incprofs.sensors.BatteryListener;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.BatterySensor;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.GPSListener;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.GPSObserver;
+import ai.ia.agh.edu.pl.workshop.incprofs.sensors.SensorsListener;
 
 public class StartActivity extends Activity {
 
@@ -32,6 +33,8 @@ public class StartActivity extends Activity {
     private static BatteryListener batteryListener;
     private static GPSListener gpsListener;
     private static ApplicationListener appListener;
+    private static SensorsListener sensorsListener;
+
 
 
     // Sensors
@@ -88,12 +91,12 @@ public class StartActivity extends Activity {
         registerReceiver(appListener, appFilter);
     }
 
-    public void stopGPS() {
+    public void stopBattery() {
         unregisterReceiver(batteryListener);
         Aware.stopSensor(this, Aware_Preferences.STATUS_BATTERY);
     }
 
-    public void stopBattery() {
+    public void stopGPS() {
         unregisterReceiver(gpsListener);
         Aware.stopSensor(this, Aware_Preferences.STATUS_LOCATION_GPS);
     }
@@ -111,6 +114,25 @@ public class StartActivity extends Activity {
         registerReceiver(batteryListener, batteryFilter);
     }
 
+    public void startSensorsListener() {
+
+        sensorsListener = new SensorsListener();
+        IntentFilter sensorsFilter = new IntentFilter();
+        sensorsFilter.addAction(Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND);
+        sensorsFilter.addAction(Battery.ACTION_AWARE_BATTERY_CHANGED);
+        sensorsFilter.addAction(Locations.ACTION_AWARE_LOCATIONS);
+        registerReceiver(sensorsListener, sensorsFilter);
+    }
+
+    public void stopSensors() {
+        unregisterReceiver(sensorsListener);
+        Aware.stopSensor(this, Aware_Preferences.STATUS_LOCATION_GPS);
+        Aware.stopSensor(this, Aware_Preferences.STATUS_BATTERY);
+        Aware.stopSensor(this, Aware_Preferences.STATUS_APPLICATIONS);
+    }
+
+
+
     public void startApplicationSensor() {
         //Activate applications
         Log.d("AWARE", "Activate Apps");
@@ -125,19 +147,20 @@ public class StartActivity extends Activity {
         startAware();
         // LOKALIZACJA UŻYTKOWNIKA
         startGPSSensor();
-        startGPSListener();
+        // startGPSListener();
 
 
         // AKTYWNOŚĆ UŻYTKOWNIKA
 
         // APLIKACJE
         startApplicationSensor();
-        startApplicationListener();
+        // startApplicationListener();
         // PORA DNIA
         // SIEĆ WIFI DO KTÓREJ JEST PODŁĄCZONY
         // ZUZYCIE BATERII
         startBatterySensor();
-        startBatteryListener();
+        //startBatteryListener();
+        startSensorsListener();
     }
 
     @Override
