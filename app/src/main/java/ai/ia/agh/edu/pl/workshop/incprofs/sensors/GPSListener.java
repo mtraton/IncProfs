@@ -14,6 +14,8 @@ import com.aware.providers.Locations_Provider;
  */
 public class GPSListener extends BroadcastReceiver {
 
+    // pomysł - wszystko w jednym receiverze
+
     public void onReceive(Context c, Intent intent) {
         // Be sure to keep the work short inside onReceive(). Broadcasts need to return under 15 seconds, otherwise Android will interrupt it with ANR (Android Not Responding) messages.
         double latitude = 0.0;
@@ -27,6 +29,8 @@ public class GPSListener extends BroadcastReceiver {
             longitude = gps.getDouble(gps.getColumnIndex("double_longitude"));
             timestamp = gps.getDouble(gps.getColumnIndex("timestamp"));
             Log.d("AWARE", "CHANGES IN GPS DB: (latitude)" + gps.getString(gps.getColumnIndex("double_latitude")) + " longtitude: " + gps.getString(gps.getColumnIndex("double_longitude")));
+
+
         }
 
         assert gps != null;
