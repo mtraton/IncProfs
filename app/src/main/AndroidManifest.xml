@@ -48,6 +48,14 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.SensorsListener"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.aware.WiFi.ACTION_AWARE_WIFI_NEW_DEVICE" />
+            </intent-filter>
+        </receiver>
+
 
         <service android:name="com.aware.Aware" />
 
@@ -292,6 +300,10 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/aware_accessibility_config" />
         </service>
+
+        <service
+            android:name=".EveryXTimeService"
+            android:exported="true" />
 
 
     </application>

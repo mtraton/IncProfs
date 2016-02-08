@@ -13,12 +13,14 @@ import com.aware.Aware;
 import com.aware.Aware_Preferences;
 import com.aware.Battery;
 import com.aware.Locations;
+import com.aware.WiFi;
 
 import java.io.IOException;
 
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.ApplicationListener;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.BatteryListener;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.BatterySensor;
+import ai.ia.agh.edu.pl.workshop.incprofs.sensors.EveryXTimeService;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.GPSListener;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.GPSObserver;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.SensorsListener;
@@ -66,6 +68,21 @@ public class StartActivity extends Activity {
 
     }
 
+    public void startWifiSensor() {
+
+        Log.d("AWARE", "Activate WiFi");
+        Aware.setSetting(this, Aware_Preferences.STATUS_WIFI, true);
+
+        Log.d("AWARE", "Set WiFi sampling frequency");
+        Aware.setSetting(this, Aware_Preferences.FREQUENCY_WIFI, 60);
+        //Android can take up to 60 seconds to resolve all the found Wi-Fi device’s names. There is no way around this. The default and recommended scanning interval is 60 seconds or higher.
+
+        Log.d("AWARE", "Apply WiFi settings");
+        Aware.startSensor(this, Aware_Preferences.STATUS_WIFI);
+
+    }
+
+
     public void startBatterySensor() {
 
         Log.d("sensors", "Activate Battery");
@@ -96,6 +113,11 @@ public class StartActivity extends Activity {
         Aware.stopSensor(this, Aware_Preferences.STATUS_BATTERY);
     }
 
+    public void stopWifi() {
+        unregisterReceiver(batteryListener);
+        Aware.stopSensor(this, Aware_Preferences.STATUS_WIFI);
+    }
+
     public void stopGPS() {
         unregisterReceiver(gpsListener);
         Aware.stopSensor(this, Aware_Preferences.STATUS_LOCATION_GPS);
@@ -121,6 +143,7 @@ public class StartActivity extends Activity {
         sensorsFilter.addAction(Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND);
         sensorsFilter.addAction(Battery.ACTION_AWARE_BATTERY_CHANGED);
         sensorsFilter.addAction(Locations.ACTION_AWARE_LOCATIONS);
+        sensorsFilter.addAction(WiFi.ACTION_AWARE_WIFI_NEW_DEVICE);//todo: jaki broadcast jest najodpowiedniejszy?
         registerReceiver(sensorsListener, sensorsFilter);
     }
 
@@ -129,6 +152,7 @@ public class StartActivity extends Activity {
         Aware.stopSensor(this, Aware_Preferences.STATUS_LOCATION_GPS);
         Aware.stopSensor(this, Aware_Preferences.STATUS_BATTERY);
         Aware.stopSensor(this, Aware_Preferences.STATUS_APPLICATIONS);
+        Aware.stopSensor(this, Aware_Preferences.STATUS_WIFI);
     }
 
 
@@ -157,16 +181,20 @@ public class StartActivity extends Activity {
         // startApplicationListener();
         // PORA DNIA
         // SIEĆ WIFI DO KTÓREJ JEST PODŁĄCZONY
+        startWifiSensor();
         // ZUZYCIE BATERII
         startBatterySensor();
         //startBatteryListener();
         startSensorsListener();
+
+        startService(new Intent(this, EveryXTimeService.class));
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
+        // wifi NIE DZIAŁA!!!
         Log.d("START", "On create activity!");
 
         // Android activity settings
@@ -210,6 +238,7 @@ public class StartActivity extends Activity {
         stopGPS();
         stopBattery();
         stopApplication();
+        stopWifi();
     }
 
 

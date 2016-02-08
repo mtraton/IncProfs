@@ -63,7 +63,7 @@ public class SensorsListener extends BroadcastReceiver {
                 Locations_Provider.Locations_Data.TIMESTAMP + " DESC LIMIT 1");
 
         wifiCursor = c.getContentResolver().query(Network_Provider.Network_Data.CONTENT_URI, null, null, null,
-                Locations_Provider.Locations_Data.TIMESTAMP + " DESC LIMIT 1");
+                Network_Provider.Network_Data.TIMESTAMP + " DESC LIMIT 1");
 
     }
 
@@ -98,6 +98,14 @@ public class SensorsListener extends BroadcastReceiver {
 
     }
 
+    public void getWiFiData() {
+        if (wifiCursor != null && wifiCursor.moveToFirst()) {
+            ssid = wifiCursor.getString(wifiCursor.getColumnIndex("ssid"));
+            timestamp = wifiCursor.getDouble(wifiCursor.getColumnIndex("timestamp"));
+            Log.d("sensors", "WiFi: " + ssid + " ( " + timestamp + " ) ");
+        }
+
+    }
 
     public void stopCursors() {
         appCursor.close();
@@ -114,10 +122,9 @@ public class SensorsListener extends BroadcastReceiver {
         getAppData();
         getBatteryData();
         getGPSData();
+        getWiFiData();
 
         stopCursors();
-        // extras jest nullem
-        //double double_latitude =  intent.getDoubleExtra("double_latitude", 180.0);; // // TODO: 04.02.2016  nie wiadomo czy tak się to nazywa
     }
 }
 
