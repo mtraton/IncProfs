@@ -9,8 +9,6 @@ import android.util.Log;
 import com.aware.providers.Applications_Provider;
 import com.aware.providers.Battery_Provider;
 import com.aware.providers.Locations_Provider;
-import com.aware.providers.Network_Provider;
-import com.aware.providers.WiFi_Provider;
 import com.aware.providers.WiFi_Provider;
 
 import java.util.HashMap;
@@ -120,7 +118,7 @@ public class SensorsListener extends BroadcastReceiver {
     public void onReceive(Context c, Intent intent) {
         // Be sure to keep the work short inside onReceive(). Broadcasts need to return under 15 seconds, otherwise Android will interrupt it with ANR (Android Not Responding) messages.
 
-        Log.d("test","Sensors Listener onReceive");
+        Log.d("test", "Sensors Listener onReceive");
         startCursors(c);
 
         getAppData();
@@ -133,7 +131,8 @@ public class SensorsListener extends BroadcastReceiver {
     }
 
     private void saveDataToHashMap() {
-        
+
+
     }
 }
 

@@ -74,7 +74,7 @@ public class StartActivity extends Activity {
         Aware.setSetting(this, Aware_Preferences.STATUS_WIFI, true);
 
         Log.d("AWARE", "Set WiFi sampling frequency");
-        Aware.setSetting(this, Aware_Preferences.FREQUENCY_WIFI, 60);
+        Aware.setSetting(this, Aware_Preferences.FREQUENCY_WIFI, 300);
         //Android can take up to 60 seconds to resolve all the found Wi-Fi device’s names. There is no way around this. The default and recommended scanning interval is 60 seconds or higher.
 
         Log.d("AWARE", "Apply WiFi settings");
@@ -102,7 +102,7 @@ public class StartActivity extends Activity {
         sensorsFilter.addAction(Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND);
         sensorsFilter.addAction(Battery.ACTION_AWARE_BATTERY_CHANGED);
         sensorsFilter.addAction(Locations.ACTION_AWARE_LOCATIONS);
-        sensorsFilter.addAction(WiFi.ACTION_AWARE_WIFI_NEW_DEVICE);//todo: jaki broadcast jest najodpowiedniejszy?
+        //sensorsFilter.addAction(WiFi.ACTION_AWARE_WIFI_NEW_DEVICE);//todo: jaki broadcast jest najodpowiedniejszy?
         sensorsFilter.addAction(WiFi.ACTION_AWARE_WIFI_SCAN_STARTED);
         registerReceiver(sensorsListener, sensorsFilter);
     }
