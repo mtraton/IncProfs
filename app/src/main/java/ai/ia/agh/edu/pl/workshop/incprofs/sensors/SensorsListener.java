@@ -33,8 +33,8 @@ public class SensorsListener extends BroadcastReceiver {
     String activity_name; // unknown, tilting, on_foot, in_vehicle, on_bicycle, running, walking
 
     Cursor appCursor;
-    String application_name;
-    String package_name;
+    String application_name = "";
+    String package_name = "";
 
     Cursor batteryCursor;
     int battery_level = 0;
@@ -45,10 +45,11 @@ public class SensorsListener extends BroadcastReceiver {
     double double_longitude = 0.0;
 
     Cursor wifiCursor;
-    String ssid;
+    String ssid = "";
 
     double timestamp = 0.0; // wspólny dla wszystkich kursorów
 
+    String profile = ""; // todo: dodać automatyczne labelowanie
 
     // pomysł - wszystko w jednym receiverze
 
@@ -132,8 +133,20 @@ public class SensorsListener extends BroadcastReceiver {
 
     private void saveDataToHashMap() {
 
+        //todo: zabezpieczyć się przed pustymi danymi
 
+        sensorDataInstance.put("application_name", application_name);
+        sensorDataInstance.put("package_name", package_name);
+        sensorDataInstance.put("battery_level", battery_level);
+        sensorDataInstance.put("battery_scale", battery_scale);
+        sensorDataInstance.put("double_latitude", double_latitude);
+        sensorDataInstance.put("double_longitude", double_longitude);
+        sensorDataInstance.put("ssid", ssid);
+        sensorDataInstance.put("timestamp", ssid);
+        sensorDataInstance.put("profile", profile);
     }
+
+
 }
 
 
