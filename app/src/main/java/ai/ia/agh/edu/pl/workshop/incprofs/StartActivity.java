@@ -92,49 +92,8 @@ public class StartActivity extends Activity {
         Aware.startSensor(this, Aware_Preferences.STATUS_BATTERY);
     }
 
-    public void startGPSListener() {
 
-        gpsListener = new GPSListener();
-        IntentFilter gpsFilter = new IntentFilter();
-        gpsFilter.addAction(Locations.ACTION_AWARE_LOCATIONS); // // TODO: 05.02.2016 możliwe źródło błędu
-        registerReceiver(gpsListener, gpsFilter);
-    }
 
-    public void startApplicationListener() {
-
-        appListener = new ApplicationListener();
-        IntentFilter appFilter = new IntentFilter();
-        appFilter.addAction(Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND); // // TODO: 05.02.2016 możliwe źródło błędu
-        registerReceiver(appListener, appFilter);
-    }
-
-    public void stopBattery() {
-        unregisterReceiver(batteryListener);
-        Aware.stopSensor(this, Aware_Preferences.STATUS_BATTERY);
-    }
-
-    public void stopWifi() {
-        unregisterReceiver(batteryListener);
-        Aware.stopSensor(this, Aware_Preferences.STATUS_WIFI);
-    }
-
-    public void stopGPS() {
-        unregisterReceiver(gpsListener);
-        Aware.stopSensor(this, Aware_Preferences.STATUS_LOCATION_GPS);
-    }
-
-    public void stopApplication() {
-        unregisterReceiver(appListener);
-        Aware.stopSensor(this, Aware_Preferences.STATUS_APPLICATIONS);
-    }
-
-    public void startBatteryListener() {
-
-        batteryListener = new BatteryListener();
-        IntentFilter batteryFilter = new IntentFilter();
-        batteryFilter.addAction(Battery.ACTION_AWARE_BATTERY_CHANGED);
-        registerReceiver(batteryListener, batteryFilter);
-    }
 
     public void startSensorsListener() {
 
@@ -144,11 +103,15 @@ public class StartActivity extends Activity {
         sensorsFilter.addAction(Battery.ACTION_AWARE_BATTERY_CHANGED);
         sensorsFilter.addAction(Locations.ACTION_AWARE_LOCATIONS);
         sensorsFilter.addAction(WiFi.ACTION_AWARE_WIFI_NEW_DEVICE);//todo: jaki broadcast jest najodpowiedniejszy?
+        sensorsFilter.addAction(WiFi.ACTION_AWARE_WIFI_SCAN_STARTED);
         registerReceiver(sensorsListener, sensorsFilter);
     }
 
     public void stopSensors() {
-        unregisterReceiver(sensorsListener);
+        if (sensorsListener != null) {
+            unregisterReceiver(sensorsListener);
+        }
+
         Aware.stopSensor(this, Aware_Preferences.STATUS_LOCATION_GPS);
         Aware.stopSensor(this, Aware_Preferences.STATUS_BATTERY);
         Aware.stopSensor(this, Aware_Preferences.STATUS_APPLICATIONS);
@@ -204,28 +167,6 @@ public class StartActivity extends Activity {
 
         // // TODO: 22.01.2016 czy sensory nie powinny działać w servisach, niezależnie od życia naszej aktywności?
 
-        //batterySensor = new BatterySensor(this); // todo: jako zmienna dla całej klasy
-
-//        try {
-//            Thread.sleep(1500);
-//        }
-//        catch (InterruptedException e)
-//        {
-//            e.printStackTrace();
-//        }
-//        startSensors();
-//
-//
-//
-//        int i = 0;
-//        int sampleLimit = 500;// todo: system nie mógł otworzyć pliku z bazą danych po 992 próbce
-//        while (i < sampleLimit) {
-//            batterySensor.getDataCursor().moveToNext();
-//            i++;
-//            Log.d("sensors", "" + i);
-//        }
-//        Log.d("sensors", "data aquistion ended?");
-
         //todo: może powinien pobierać nowe dane na podstawie time stampów do uczenia?
 
 
@@ -235,10 +176,7 @@ public class StartActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopGPS();
-        stopBattery();
-        stopApplication();
-        stopWifi();
+        stopSensors();
     }
 
 

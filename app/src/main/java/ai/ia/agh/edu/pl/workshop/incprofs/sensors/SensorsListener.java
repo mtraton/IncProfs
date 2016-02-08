@@ -9,7 +9,7 @@ import android.util.Log;
 import com.aware.providers.Applications_Provider;
 import com.aware.providers.Battery_Provider;
 import com.aware.providers.Locations_Provider;
-import com.aware.providers.Network_Provider;
+import com.aware.providers.WiFi_Provider;
 
 import java.util.HashMap;
 
@@ -62,8 +62,8 @@ public class SensorsListener extends BroadcastReceiver {
         gpsCursor = c.getContentResolver().query(Locations_Provider.Locations_Data.CONTENT_URI, null, null, null,
                 Locations_Provider.Locations_Data.TIMESTAMP + " DESC LIMIT 1");
 
-        wifiCursor = c.getContentResolver().query(Network_Provider.Network_Data.CONTENT_URI, null, null, null,
-                Network_Provider.Network_Data.TIMESTAMP + " DESC LIMIT 1");
+        wifiCursor = c.getContentResolver().query(WiFi_Provider.WiFi_Sensor.CONTENT_URI, null, null, null,
+                WiFi_Provider.WiFi_Sensor.TIMESTAMP + " DESC LIMIT 1");
 
     }
 
@@ -111,6 +111,7 @@ public class SensorsListener extends BroadcastReceiver {
         appCursor.close();
         batteryCursor.close();
         gpsCursor.close();
+        wifiCursor.close();
     }
 
 
@@ -124,7 +125,12 @@ public class SensorsListener extends BroadcastReceiver {
         getGPSData();
         getWiFiData();
 
+        saveDataToHashMap();
         stopCursors();
+    }
+
+    private void saveDataToHashMap() {
+        
     }
 }
 
