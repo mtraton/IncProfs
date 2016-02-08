@@ -102,7 +102,7 @@ public class StartActivity extends Activity {
         sensorsFilter.addAction(Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND);
         sensorsFilter.addAction(Battery.ACTION_AWARE_BATTERY_CHANGED);
         sensorsFilter.addAction(Locations.ACTION_AWARE_LOCATIONS);
-        sensorsFilter.addAction(WiFi.ACTION_AWARE_WIFI_NEW_DEVICE);//todo: jaki broadcast jest najodpowiedniejszy?
+        //sensorsFilter.addAction(WiFi.ACTION_AWARE_WIFI_NEW_DEVICE);//todo: jaki broadcast jest najodpowiedniejszy?
         sensorsFilter.addAction(WiFi.ACTION_AWARE_WIFI_SCAN_STARTED);
         registerReceiver(sensorsListener, sensorsFilter);
     }

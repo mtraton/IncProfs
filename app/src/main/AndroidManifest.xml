@@ -24,41 +24,6 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.BatteryListener"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.aware.ACTION_AWARE_BATTERY_CHANGED" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.ApplicationListener"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.aware.Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.GPSListener"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.aware.Locations.ACTION_AWARE_LOCATIONS" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.SensorsListener"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.aware.WiFi.ACTION_AWARE_WIFI_NEW_DEVICE" />
-            </intent-filter>
-        </receiver>
-
-
-        <service android:name="com.aware.Aware" />
-
 
         <provider
             android:name="com.aware.providers.Scheduler_Provider"
@@ -285,6 +250,43 @@
             >
         </provider>
 
+
+
+        <receiver
+            android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.BatteryListener"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.aware.ACTION_AWARE_BATTERY_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.ApplicationListener"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.aware.Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.GPSListener"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.aware.Locations.ACTION_AWARE_LOCATIONS" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.SensorsListener"
+            android:exported="true">
+
+        </receiver>
+
+
+
+        <service android:name="com.aware.Aware" />
+
+
         <service
             android:name="com.aware.Applications"
             android:enabled="true"
@@ -301,6 +303,7 @@
                 android:resource="@xml/aware_accessibility_config" />
         </service>
 
+
         <service
             android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.EveryXTimeService"
             android:exported="true" />
@@ -308,13 +311,13 @@
 
     </application>
 
+
+
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-
 
 
 </manifest>
