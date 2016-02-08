@@ -1,19 +1,16 @@
 package ai.ia.agh.edu.pl.workshop.incprofs.learning;
 
-import java.util.Random;
-
-import ai.ia.agh.edu.pl.workshop.incprofs.sensors.BatteryData;
 import weka.core.Attribute;
-import weka.core.DenseInstance;
 import weka.core.FastVector;
-import weka.core.Instance;
 import weka.core.Instances;
 
 /**
+ * Cogito ergo sum
  * Created by Rael on 04.02.2016.
  */
 
 // Klasa przechowująca jedną próbkę wszystkich danych z sensorów do nauki
+@SuppressWarnings("deprecation")
 public class LearningData {
 
 
@@ -52,7 +49,8 @@ public class LearningData {
         this.batteryLevel = batteryLevel;
     }
 
-    public BatteryLearningData(BatteryData batteryData) {
+    /*
+    public LearningData(BatteryData batteryData) {
 
         this.fvWekaAttributes = new FastVector<>(numOfAttributes);
         for (String attributeLabel : attributeLabels) {
@@ -62,7 +60,7 @@ public class LearningData {
         instances.setClassIndex(0); // todo: dane potrzebują dodatkowego pola z wynikiem uczenia/klasyfikacji -> tj. profilem
         this.batteryData = batteryData;
     }
-
+    */
     public float getLongitude() {
         return longitude;
     }
@@ -123,7 +121,7 @@ public class LearningData {
     public void setBatteryLevel(int batteryLevel) {
         this.batteryLevel = batteryLevel;
     }
-
+    /*
     public Instance getNextInstance() {
         try {
             batteryData = batteryData.getNextBatteryDataInstance();
@@ -165,8 +163,8 @@ public class LearningData {
         }
         return instances;
     }
-
-
-}
+    */
 
 }
+
+
