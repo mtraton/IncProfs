@@ -33,8 +33,8 @@ public class SensorsListener extends BroadcastReceiver {
     String activity_name; // unknown, tilting, on_foot, in_vehicle, on_bicycle, running, walking
 
     Cursor appCursor;
-    String application_name = "";
-    String package_name = "";
+    String application_name;
+    String package_name;
 
     Cursor batteryCursor;
     int battery_level = 0;
@@ -45,11 +45,11 @@ public class SensorsListener extends BroadcastReceiver {
     double double_longitude = 0.0;
 
     Cursor wifiCursor;
-    String ssid = "";
+    String ssid;
 
     double timestamp = 0.0; // wspólny dla wszystkich kursorów
 
-    String profile = ""; // todo: dodać automatyczne labelowanie
+    String profile; // todo: dodać automatyczne labelowanie
 
     // pomysł - wszystko w jednym receiverze
 
@@ -119,7 +119,7 @@ public class SensorsListener extends BroadcastReceiver {
     public void onReceive(Context c, Intent intent) {
         // Be sure to keep the work short inside onReceive(). Broadcasts need to return under 15 seconds, otherwise Android will interrupt it with ANR (Android Not Responding) messages.
 
-        Log.d("test", "Sensors Listener onReceive");
+        Log.d("test","Sensors Listener onReceive, intent: " + intent);
         startCursors(c);
 
         getAppData();
@@ -145,8 +145,6 @@ public class SensorsListener extends BroadcastReceiver {
         sensorDataInstance.put("timestamp", ssid);
         sensorDataInstance.put("profile", profile);
     }
-
-
 }
 
 
