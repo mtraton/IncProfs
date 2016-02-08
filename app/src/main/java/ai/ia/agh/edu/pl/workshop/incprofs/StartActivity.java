@@ -109,22 +109,29 @@ public class StartActivity extends Activity {
     }
 
     public void stopBattery() {
-        unregisterReceiver(batteryListener);
+        if(batteryListener!=null) {
+            unregisterReceiver(batteryListener);
+        }
         Aware.stopSensor(this, Aware_Preferences.STATUS_BATTERY);
     }
 
     public void stopWifi() {
-        unregisterReceiver(batteryListener);
+        //if()
+        //unregisterReceiver(batteryListener);
         Aware.stopSensor(this, Aware_Preferences.STATUS_WIFI);
     }
 
     public void stopGPS() {
-        unregisterReceiver(gpsListener);
+        if(gpsListener!=null) {
+            unregisterReceiver(gpsListener);
+        }
         Aware.stopSensor(this, Aware_Preferences.STATUS_LOCATION_GPS);
     }
 
     public void stopApplication() {
-        unregisterReceiver(appListener);
+        if(appListener!=null) {
+            unregisterReceiver(appListener);
+        }
         Aware.stopSensor(this, Aware_Preferences.STATUS_APPLICATIONS);
     }
 
@@ -239,6 +246,10 @@ public class StartActivity extends Activity {
         stopBattery();
         stopApplication();
         stopWifi();
+
+        if(sensorsListener!=null) {
+            unregisterReceiver(sensorsListener);
+        }
     }
 
 
