@@ -120,7 +120,7 @@ public class SensorsListener extends BroadcastReceiver {
     public void onReceive(Context c, Intent intent) {
         // Be sure to keep the work short inside onReceive(). Broadcasts need to return under 15 seconds, otherwise Android will interrupt it with ANR (Android Not Responding) messages.
 
-        Log.d("test","Sensors Listener onReceive");
+        Log.d("test","Sensors Listener onReceive, intent: " + intent);
         startCursors(c);
 
         getAppData();
