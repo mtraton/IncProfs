@@ -279,7 +279,6 @@
         <receiver
             android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.SensorsListener"
             android:exported="true">
-
         </receiver>
 
 
@@ -312,12 +311,10 @@
     </application>
 
 
-
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
 
 </manifest>

@@ -47,7 +47,8 @@ public class SensorsListener extends BroadcastReceiver {
     Cursor wifiCursor;
     String ssid;
 
-    double timestamp = 0.0; // wspólny dla wszystkich kursorów
+    long timestamp = 0;
+    long cursor_timestamp = 0; // wspólny dla wszystkich kursorów
 
     String profile; // todo: dodać automatyczne labelowanie
 
@@ -72,19 +73,29 @@ public class SensorsListener extends BroadcastReceiver {
         if (appCursor != null && appCursor.moveToFirst()) {
             application_name = appCursor.getString(appCursor.getColumnIndex("application_name"));
             package_name = appCursor.getString(appCursor.getColumnIndex("package_name"));
-            timestamp = appCursor.getLong(appCursor.getColumnIndex("timestamp"));
-            Log.d("sensors", "Applications: " + package_name + " :  " + application_name + " ( " + timestamp + " ) ");
+            cursor_timestamp = appCursor.getLong(appCursor.getColumnIndex("timestamp"));
+
+            if (cursor_timestamp > timestamp) {
+                timestamp = cursor_timestamp;
+            }
+
+            Log.d("sensors", "Applications: " + package_name + " :  " + application_name + " ( " + cursor_timestamp + " ) ");
         }
 
     }
 
     public void getBatteryData() {
         if (batteryCursor != null && batteryCursor.moveToFirst()) {
-            timestamp = batteryCursor.getDouble(batteryCursor.getColumnIndex("timestamp"));
             battery_level = batteryCursor.getInt(batteryCursor.getColumnIndex("battery_level")); // // TODO: 04.02.2016  nie wiadomo czy tak się to nazywa
             battery_scale = batteryCursor.getInt(batteryCursor.getColumnIndex("battery_scale"));
+            cursor_timestamp = batteryCursor.getLong(batteryCursor.getColumnIndex("timestamp"));
+
+            if (cursor_timestamp > timestamp) {
+                timestamp = cursor_timestamp;
+            }
+
             //Caused by: android.database.CursorIndexOutOfBoundsException: Index -1 requested, with a size of 1
-            Log.d("sensors", "Battery: " + battery_level + " /  " + battery_scale + " ( " + timestamp + " ) ");
+            Log.d("sensors", "Battery: " + battery_level + " / " + battery_scale + " ( " + cursor_timestamp + " ) ");
         }
 
     }
@@ -93,8 +104,13 @@ public class SensorsListener extends BroadcastReceiver {
         if (gpsCursor != null && gpsCursor.moveToFirst()) {
             double_latitude = gpsCursor.getDouble(gpsCursor.getColumnIndex("double_latitude"));
             double_longitude = gpsCursor.getDouble(gpsCursor.getColumnIndex("double_longitude"));
-            timestamp = gpsCursor.getDouble(gpsCursor.getColumnIndex("timestamp"));
-            Log.d("sensors", "GPS: latitude: " + double_latitude + ", longitude:  " + double_longitude + " ( " + timestamp + " ) ");
+            cursor_timestamp = gpsCursor.getLong(gpsCursor.getColumnIndex("timestamp"));
+
+            if (cursor_timestamp > timestamp) {
+                timestamp = cursor_timestamp;
+            }
+
+            Log.d("sensors", "GPS: latitude: " + double_latitude + ", longitude:  " + double_longitude + " ( " + cursor_timestamp + " ) ");
         }
 
     }
@@ -102,8 +118,13 @@ public class SensorsListener extends BroadcastReceiver {
     public void getWiFiData() {
         if (wifiCursor != null && wifiCursor.moveToFirst()) {
             ssid = wifiCursor.getString(wifiCursor.getColumnIndex("ssid"));
-            timestamp = wifiCursor.getDouble(wifiCursor.getColumnIndex("timestamp"));
-            Log.d("sensors", "WiFi: " + ssid + " ( " + timestamp + " ) ");
+            cursor_timestamp = wifiCursor.getLong(wifiCursor.getColumnIndex("timestamp"));
+
+            if (cursor_timestamp > timestamp) {
+                timestamp = cursor_timestamp;
+            }
+
+            Log.d("sensors", "WiFi: " + ssid + " ( " + cursor_timestamp + " ) ");
         }
 
     }
@@ -119,13 +140,19 @@ public class SensorsListener extends BroadcastReceiver {
     public void onReceive(Context c, Intent intent) {
         // Be sure to keep the work short inside onReceive(). Broadcasts need to return under 15 seconds, otherwise Android will interrupt it with ANR (Android Not Responding) messages.
 
-        Log.d("test","Sensors Listener onReceive, intent: " + intent);
+        Log.d("sensors", "Sensors Listener onReceive, intent: " + intent);
         startCursors(c);
 
         getAppData();
         getBatteryData();
         getGPSData();
         getWiFiData();
+
+        //very pessimistic version of Broadcast with no DB data...
+        if (timestamp == 0) {
+            Log.d("sensors","timestamp was 0! is everything correct in codes? timestamp:"+timestamp + " | cursor_ts:"+cursor_timestamp);
+            timestamp = System.currentTimeMillis();
+        }
 
         saveDataToHashMap();
         stopCursors();
@@ -142,7 +169,7 @@ public class SensorsListener extends BroadcastReceiver {
         sensorDataInstance.put("double_latitude", double_latitude);
         sensorDataInstance.put("double_longitude", double_longitude);
         sensorDataInstance.put("ssid", ssid);
-        sensorDataInstance.put("timestamp", ssid);
+        sensorDataInstance.put("timestamp", ssid);  //TODO dlaczego ssid?
         sensorDataInstance.put("profile", profile);
     }
 }

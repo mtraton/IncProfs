@@ -22,7 +22,6 @@ import ai.ia.agh.edu.pl.workshop.incprofs.sensors.BatteryListener;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.BatterySensor;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.EveryXTimeService;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.GPSListener;
-import ai.ia.agh.edu.pl.workshop.incprofs.sensors.GPSObserver;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.SensorsListener;
 
 public class StartActivity extends Activity {
@@ -31,19 +30,13 @@ public class StartActivity extends Activity {
     public static final String SURNAME = "surname";
 
     // Listeners
-
-    private static BatteryListener batteryListener;
-    private static GPSListener gpsListener;
-    private static ApplicationListener appListener;
+    //private static BatteryListener batteryListener;
+    //private static GPSListener gpsListener;
+    //private static ApplicationListener appListener;
     private static SensorsListener sensorsListener;
 
 
-
     // Sensors
-
-    BatterySensor batterySensor;
-    GPSObserver gpsObserver;
-
 
     public void startAware() {
 
@@ -54,6 +47,14 @@ public class StartActivity extends Activity {
         startService(aware);
     }
 
+    public void startBatterySensor() {
+
+        Log.d("sensors", "Activate Battery");
+        Aware.setSetting(this, Aware_Preferences.STATUS_BATTERY, true);
+
+        Log.d("sensors", "Apply Battery settings");
+        Aware.startSensor(this, Aware_Preferences.STATUS_BATTERY);
+    }
 
     public void startGPSSensor() {
 
@@ -82,17 +83,14 @@ public class StartActivity extends Activity {
 
     }
 
-
-    public void startBatterySensor() {
-
-        Log.d("sensors", "Activate Battery");
-        Aware.setSetting(this, Aware_Preferences.STATUS_BATTERY, true);
-
-        Log.d("sensors", "Apply Battery settings");
-        Aware.startSensor(this, Aware_Preferences.STATUS_BATTERY);
+    public void startApplicationSensor() {
+        //Activate applications
+        Log.d("AWARE", "Activate Apps");
+        Aware.setSetting(this, Aware_Preferences.STATUS_APPLICATIONS, true);
+        //Apply settings
+        Log.d("AWARE", "Apply Apps settings");
+        Aware.startSensor(this, Aware_Preferences.STATUS_APPLICATIONS);
     }
-
-
 
 
     public void startSensorsListener() {
@@ -104,8 +102,10 @@ public class StartActivity extends Activity {
         sensorsFilter.addAction(Locations.ACTION_AWARE_LOCATIONS);
         //sensorsFilter.addAction(WiFi.ACTION_AWARE_WIFI_NEW_DEVICE);//todo: jaki broadcast jest najodpowiedniejszy?
         sensorsFilter.addAction(WiFi.ACTION_AWARE_WIFI_SCAN_STARTED);
+
         registerReceiver(sensorsListener, sensorsFilter);
     }
+
 
     public void stopSensors() {
         if (sensorsListener != null) {
@@ -118,63 +118,58 @@ public class StartActivity extends Activity {
         Aware.stopSensor(this, Aware_Preferences.STATUS_WIFI);
     }
 
-
-
-    public void startApplicationSensor() {
-        //Activate applications
-        Log.d("AWARE", "Activate Apps");
-        Aware.setSetting(this, Aware_Preferences.STATUS_APPLICATIONS, true);
-        //Apply settings
-        Log.d("AWARE", "Apply Apps settings");
-        Aware.startSensor(this, Aware_Preferences.STATUS_APPLICATIONS);
-    }
-
     public void startSensors() {
 
         startAware();
+
+
         // LOKALIZACJA UŻYTKOWNIKA
         startGPSSensor();
         // startGPSListener();
 
 
-        // AKTYWNOŚĆ UŻYTKOWNIKA
+    // AKTYWNOŚĆ UŻYTKOWNIKA
 
         // APLIKACJE
         startApplicationSensor();
         // startApplicationListener();
+
         // PORA DNIA
+
         // SIEĆ WIFI DO KTÓREJ JEST PODŁĄCZONY
         startWifiSensor();
+
         // ZUZYCIE BATERII
         startBatterySensor();
         //startBatteryListener();
+
+    // Broadcast Receiver
         startSensorsListener();
 
+    // Service running every X minutes
         startService(new Intent(this, EveryXTimeService.class));
-
     }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        // wifi NIE DZIAŁA!!!
         Log.d("START", "On create activity!");
 
         // Android activity settings
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-
-        // // TODO: 22.01.2016 czy sensory nie powinny działać w servisach, niezależnie od życia naszej aktywności?
-
+        // TODO: 22.01.2016 czy sensory nie powinny działać w servisach, niezależnie od życia naszej aktywności?
         //todo: może powinien pobierać nowe dane na podstawie time stampów do uczenia?
-
 
         startSensors();
     }
 
     @Override
     public void onDestroy() {
+
         super.onDestroy();
         stopSensors();
     }
