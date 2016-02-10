@@ -12,6 +12,8 @@ import com.aware.providers.Locations_Provider;
 import com.aware.providers.WiFi_Provider;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedHashMap;
 
 import ai.ia.agh.edu.pl.workshop.incprofs.learning.DataToInstances;
@@ -24,8 +26,21 @@ import weka.core.Instances;
  */
 public class SensorsListener extends BroadcastReceiver {
 
+    public SensorsListener() // todo: możliwe źródło błędów
+    {
+        createProfileMap();
+    }
 
     LinkedHashMap<String, Object> sensorDataInstance = new LinkedHashMap<>(); //zapewnia kolejność "wsadzania" elementów
+
+    String profileNames [] = {"morning", "work", "afterwork", "night"};
+
+    public enum Day {
+        MORNING, WORK, AFTERWORK, NIGHT
+    }
+
+    LinkedHashMap<Day,String> profilesMap = new LinkedHashMap<>();
+
 
     //Cursors todo: wrzucić w jakąś strukturę danych
     //todo : zrobić domyślne dane jak dla danego sensoru nie będziemy mieli danych na początku?
@@ -147,6 +162,7 @@ public class SensorsListener extends BroadcastReceiver {
 
         Log.d("sensors", "Sensors Listener onReceive, intent: " + intent);
 
+
         startCursors(c);
 
         timestamp = 0;
@@ -186,8 +202,52 @@ public class SensorsListener extends BroadcastReceiver {
         sensorDataInstance.put("double_latitude", double_latitude);
         sensorDataInstance.put("double_longitude", double_longitude);
         sensorDataInstance.put("ssid", ssid);
-        sensorDataInstance.put("timestamp", timestamp);
-        sensorDataInstance.put("profile", profile);
+        sensorDataInstance.put("timestamp", new DataUtil().timeStampToDate(timestamp));
+        sensorDataInstance.put("profile", chooseLabel(timestamp));
+    }
+
+    public void createProfileMap()
+    {
+        int stringIndex = 0;
+        for(Day d : Day.values())
+        {
+            profilesMap.put(d, profileNames[stringIndex]);
+            stringIndex++;
+        }
+    }
+
+
+
+    public String chooseLabel(double timestamp)
+    {
+        Date date = new DataUtil().timeStampToDate(timestamp);
+        //Calendar c = Calendar.getInstance();
+        //c.setTime(date);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // the format of your date
+        //sdf.setTimeZone(TimeZone.getTimeZone("GMT-4")); // give a timezone reference for formating (see comment at the bottom
+        String formattedDate = sdf.format(date);
+        System.out.println(formattedDate);
+        int hour = date.getHours();//c.get(Calendar.HOUR_OF_DAY);
+
+        if (hour >= 6 && hour < 8)
+        {
+            return profilesMap.get(Day.MORNING);
+        }
+        else if(hour >= 8 && hour <= 16) // at work
+        {
+            return profilesMap.get(Day.WORK);
+        }
+        else if(hour > 16 &&  hour <= 22)
+        {
+            return profilesMap.get(Day.AFTERWORK);
+        }
+        else
+        {
+            return profilesMap.get(Day.NIGHT);
+        }
+
+
     }
 }
 

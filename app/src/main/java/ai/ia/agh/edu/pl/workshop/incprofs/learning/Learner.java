@@ -17,7 +17,7 @@ import weka.core.Instance;
  */
 public class Learner {
 
-    Classifier learner;
+    private static Classifier learner;
     ArffFileStream stream;
     String streamFilePath;
 
@@ -27,17 +27,31 @@ public class Learner {
 
     }
 
+    public static Classifier getLearner() {
+        return learner;
+    }
+
     public void prepareStream(String streamFilePath) throws NullPointerException {
         this.streamFilePath = streamFilePath; // // TODO: 22.01.2016 może tu dostać nulla, obsłużyć 
         stream = new ArffFileStream(streamFilePath, -1);
         stream.prepareForUse();
 
+
     }
 
     public void prepareLearner() {
-        learner = new HoeffdingTree();
-        learner.setModelContext(stream.getHeader());
-        learner.prepareForUse();
+        if(learner == null)
+        {
+            learner = new HoeffdingTree();
+            learner.setModelContext(stream.getHeader()); // błąd - możliwa różnica w headerach ARFF?
+
+            //todo class index?
+            learner.prepareForUse();
+        }
+
+        //Method threw 'java.lang.NullPointerException' exception. Cannot evaluate moa.classifiers.trees.HoeffdingTree$LearningNodeNBAdaptive.toString()
+
+
 
     }
 
@@ -46,7 +60,7 @@ public class Learner {
         while (stream.hasMoreInstances()) {//// TODO: 22.01.2016 usunąć
 
             Instance trainInst = stream.nextInstance();
-            Log.d("moa", "class value = " + trainInst.classValue());
+            Log.d("moa", "class value = " + trainInst.classValue()); // zwraca 0 zamiast blank
             learner.trainOnInstance(trainInst);
             /*
             Method threw 'java.lang.NullPointerException' exception. Cannot evaluate moa.classifiers.trees.HoeffdingTree$LearningNodeNBAdaptive.toString()

@@ -261,22 +261,6 @@
         </receiver>
 
         <receiver
-            android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.ApplicationListener"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.aware.Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.GPSListener"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.aware.Locations.ACTION_AWARE_LOCATIONS" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
             android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.SensorsListener"
             android:exported="true">
         </receiver>

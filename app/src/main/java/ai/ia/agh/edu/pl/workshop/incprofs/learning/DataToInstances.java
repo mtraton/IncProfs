@@ -2,35 +2,38 @@ package ai.ia.agh.edu.pl.workshop.incprofs.learning;
 
 import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import weka.core.Attribute;
 import weka.core.DenseInstance;
-import weka.core.Instance;
 import weka.core.Instances;
 
 /**
  * Created by Rael on 04.02.2016.
- * Klasa ma pobierać dane z ostatnich 20 minut (co 20 minut?)
+ * LinkedHashMap (dane z sensorów) -> Instances
  */
-@SuppressWarnings("deprecation")
+
+
 public class DataToInstances {
 
-    private static String instancesLabel = "SensorData";
-    private static int initialCapacity = 1; // todo:
+    //  Instances
     Instances newInstances;
+    private static String instancesLabel = "SensorData";
+    private static int initialCapacity = 1;
 
+    // Attributes
     ArrayList<Attribute> attributes;
-
     int numOfAttributes;
     int currentAttributeNum;
 
+    // Dane wejściowe
     LinkedHashMap<String, Object> sensorData;
-
-    Instance newInstance;
 
     public DataToInstances(LinkedHashMap<String, Object> sensorData)
     {
@@ -38,29 +41,31 @@ public class DataToInstances {
         this.sensorData = sensorData;
 
     }
-    //todo: czy data nie lepiej repreztować jako date?
-    // todo: czy nie prościej robić zapis do pliku ARFF i parsowanie
-    // ewentualnie upewnić sę że atrrNumer nie jest przypadkowym hashem
+
     public void createWekaAttributes() {
          if (sensorData != null) {
+
             numOfAttributes = sensorData.entrySet().size();
-
-             // atts.addElement(new Attribute("att5", dataRel, 0));
-             //atts.addElement(new Attribute("att3", (FastVector) null));
-             //attsRel.addElement(new Attribute("att5.1"));
-
-            this.attributes = new ArrayList<>(numOfAttributes); // todo: możliwe źródło błędu
+            this.attributes = new ArrayList<>(numOfAttributes);
             int attrNumber = 0;
+
             for (Map.Entry<String, Object> entry : sensorData.entrySet()) {
+
                 String key = entry.getKey();
                 Object value = entry.getValue();
-                //
+
                 if (value != null) {
                     if (value instanceof String) {
-                        attributes.add(new Attribute(key, (List<String>) null, attrNumber));//żeby stworzyć atrybut typu String trzeba się posłużyć taką konstrukcją
+
+                        //żeby stworzyć atrybut typu String trzeba się posłużyć taką konstrukcją
+                        attributes.add(new Attribute(key, (List<String>) null, attrNumber));
                     }
-                    //musi i tak przekonwertować na double
-                    else { //todo: możliwe źródło błędu
+                    else if (value instanceof Date)
+                    {
+                        attributes.add(new Attribute(key,"yyyy-MM-dd HH:mm:ss"));//todo:możliwe źródło błędów
+                    }
+                   // jeśli dana nie jest Stringiem to musi być doublem -> atrybutem typu numeric
+                    else {
                         attributes.add(new Attribute(key, attrNumber));//
                     }
 
@@ -85,6 +90,8 @@ public class DataToInstances {
 
             createWekaAttributes();
             Instances data = new Instances("ProfileLearning", attributes, 0);
+            data.setClassIndex(numOfAttributes - 1);// TODO możliwe źródło błędów
+        
             double vals [] = new double[data.numAttributes()];
             //newInstance = new DenseInstance(numOfAttributes);
 
@@ -94,7 +101,7 @@ public class DataToInstances {
                 Object value = entry.getValue();
 
 
-                //todo: czy nie wystarczy samo currentatt numbe?
+               
                 if (value != null) {
                     if (value instanceof String) {
                         String stringValue = (String) value;
@@ -102,6 +109,20 @@ public class DataToInstances {
                         //newInstance.setValue(attributes.get(currentAttributeNum), stringValue);
                         // konwertuje tutaj przy ustawianiu string na double = 0
                         vals[currentAttributeNum] = data.attribute(currentAttributeNum).addStringValue(stringValue);
+                    }
+                    else if (value instanceof Date)
+                    {
+                        Date date = (Date) value;
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // the format of your date
+                        //sdf.setTimeZone(TimeZone.getTimeZone("GMT-4")); // give a timezone reference for formating (see comment at the bottom
+                        String formattedDate = sdf.format(date);
+
+
+                        try {
+                            vals[currentAttributeNum] = data.attribute(currentAttributeNum).parseDate( formattedDate);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                     //musi i tak przekonwertować na double
                     else { //todo: możliwe źródło błędu
@@ -112,6 +133,7 @@ public class DataToInstances {
                         //int attIndex = attributes.get(currentAttributeNum).index();
                         //newInstance.setValue(attributes.get(currentAttributeNum), doubleValue);
                     }
+                    //// TODO: 10.02.2016  data i klasa jako inne typy
 
 
                 } else {

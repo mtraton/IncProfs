@@ -7,6 +7,7 @@
         <string name="go_button_label">Rozpocznij</string>
         <string name="title_activity_question">Pytanie</string>
         <string name="finish_quiz_button_label">Zakończ</string>
+        <string name="arff_file_name">learningData.arff</string>
 
 
 

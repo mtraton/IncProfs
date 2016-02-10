@@ -18,6 +18,7 @@ import com.aware.WiFi;
 import java.io.File;
 import java.io.IOException;
 
+import ai.ia.agh.edu.pl.workshop.incprofs.sensors.AlarmManagerReceiver;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.EveryXTimeService;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.SensorsListener;
 
@@ -31,7 +32,7 @@ public class StartActivity extends Activity {
     //private static GPSListener gpsListener;
     //private static ApplicationListener appListener;
     private static SensorsListener sensorsListener;
-
+    private static AlarmManagerReceiver learningListener;
 
     // Sensors
 
@@ -145,9 +146,27 @@ public class StartActivity extends Activity {
 
     // Service running every X minutes
         startService(new Intent(this, EveryXTimeService.class));
+
+        //startLearningListener();
     }
 
+    /*
+    public void startLearningListener()
+    {
+        learningListener = new AlarmManagerReceiver();
+        IntentFilter learningFilter = new IntentFilter();
+        learningFilter.addAction(EveryXTimeService.);
 
+
+        registerReceiver(learningListener, learningFilter);
+    }
+    public void stopLearningListener()
+    {
+        if (learningListener != null) {
+            unregisterReceiver(learningListener);
+        }
+    }
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

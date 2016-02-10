@@ -42,14 +42,21 @@ public class EveryXTimeService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
 
+        ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis(),
+                1000 * 60 * 2,
+                AMT_PendingIntent); //todo: możliwe źródło błędów
+
+        /*
         // Each and every 15 minutes will trigger onReceive of your BroadcastReceiver
         ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setInexactRepeating(
                 AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis(),
-                AlarmManager.INTERVAL_FIFTEEN_MINUTES,      // 15min
+                AlarmManager.,      // 15min
                 //60*1000,      // 1min
                 AMT_PendingIntent);
-
+        */
 
         registerReceiver(AMT_BroadcastReceiver, new IntentFilter(AMT_PING));
     }
