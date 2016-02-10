@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
 import com.aware.Applications;
 import com.aware.Aware;
@@ -23,8 +25,8 @@ import ai.ia.agh.edu.pl.workshop.incprofs.sensors.SensorsListener;
 
 public class StartActivity extends Activity {
 
-    public static final String NAME = "name";
-    public static final String SURNAME = "surname";
+    private ToggleButton toggle_learning;
+    private static final String toggleButtonLearningState = "toggleButton_Learning_State";
 
     // Listeners
     //private static BatteryListener batteryListener;
@@ -105,8 +107,13 @@ public class StartActivity extends Activity {
 
 
     public void stopSensors() {
-        if (sensorsListener != null) {
-            unregisterReceiver(sensorsListener);
+
+        try {
+            if (sensorsListener != null) {
+                unregisterReceiver(sensorsListener);
+            }
+        } catch (IllegalArgumentException e) {
+            sensorsListener = null;
         }
 
         Aware.stopSensor(this, Aware_Preferences.STATUS_LOCATION_GPS);
@@ -115,10 +122,10 @@ public class StartActivity extends Activity {
         Aware.stopSensor(this, Aware_Preferences.STATUS_WIFI);
     }
 
+
     public void startSensors() {
 
         startAware();
-
 
         // LOKALIZACJA UŻYTKOWNIKA
         startGPSSensor();
@@ -151,8 +158,7 @@ public class StartActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        Log.d("START", "On create activity!");
+        Log.d("StartActivity", "On create()");
 
         // Android activity settings
         super.onCreate(savedInstanceState);
@@ -167,17 +173,32 @@ public class StartActivity extends Activity {
         // TODO: 22.01.2016 czy sensory nie powinny działać w servisach, niezależnie od życia naszej aktywności?
         //todo: może powinien pobierać nowe dane na podstawie time stampów do uczenia?
 
-        startSensors();
+        //startSensors();
+
+        toggle_learning = (ToggleButton) findViewById(R.id.toggleButton_learning);
+        toggle_learning.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // The toggle is enabled
+                    Log.d("StartActivity", "toggle On");
+                    startSensors();
+                } else {
+                    // The toggle is disabled
+                    Log.d("StartActivity", "toggle Off");
+                    stopSensors();
+                }
+            }
+        });
+
     }
 
     @Override
     public void onDestroy() {
+        Log.d("StartActivity", "onDestroy()");
 
         super.onDestroy();
         stopSensors();
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -185,6 +206,31 @@ public class StartActivity extends Activity {
         getMenuInflater().inflate(R.menu.start, menu);
         return true;
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        Log.d("StartActivity", "onSaveInstanceState()");
+        savedInstanceState.putBoolean(toggleButtonLearningState, toggle_learning.isChecked());
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.d("StartActivity", "onRestoreInstanceState()");
+        super.onRestoreInstanceState(savedInstanceState);
+
+        toggle_learning.setChecked(savedInstanceState.getBoolean(toggleButtonLearningState, false));
+    }
+
+
+    /*
+    @+id/button_testing
+     */
+    public void startTesting(View view) {
+        Log.d("StartActivity", "button testing pressed: startTesting()");
+    }
+
 
     /**
      * Called by onClick event of go_button
