@@ -64,8 +64,8 @@ public class EveryXTimeService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("EveryXTime", "onStartCommand() | start id:" + startId + ": " + intent);
-        return START_STICKY;
-        //return START_NOT_STICKY;  // service killed with process
+        //return START_STICKY;
+        return START_NOT_STICKY;  // service killed with process
     }
 
     @Override

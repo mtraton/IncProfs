@@ -291,6 +291,8 @@
             android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.EveryXTimeService"
             android:exported="true" />
 
+        <service
+            android:name="ai.ia.agh.edu.pl.workshop.incprofs.LearningService" />
 
     </application>
 

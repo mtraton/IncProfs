@@ -179,14 +179,14 @@ public class SensorsListener extends BroadcastReceiver {
         }
 
         saveDataToHashMap();
-        Instances instances = new DataToInstances(sensorDataInstance).sensorDataToInstance();
-
-        SaveInstanceToFile saveInstanceToFile = new SaveInstanceToFile(c);
-        try {
-            saveInstanceToFile.writeInstancesData(instances); // todo: uprościć
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        Instances instances = new DataToInstances(sensorDataInstance).sensorDataToInstance();
+//
+//        SaveInstanceToFile saveInstanceToFile = new SaveInstanceToFile(c);
+//        try {
+//            saveInstanceToFile.writeInstancesData(instances); // todo: uprościć
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         stopCursors();
     }
