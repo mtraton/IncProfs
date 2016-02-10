@@ -15,13 +15,10 @@ import com.aware.Battery;
 import com.aware.Locations;
 import com.aware.WiFi;
 
+import java.io.File;
 import java.io.IOException;
 
-import ai.ia.agh.edu.pl.workshop.incprofs.sensors.ApplicationListener;
-import ai.ia.agh.edu.pl.workshop.incprofs.sensors.BatteryListener;
-import ai.ia.agh.edu.pl.workshop.incprofs.sensors.BatterySensor;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.EveryXTimeService;
-import ai.ia.agh.edu.pl.workshop.incprofs.sensors.GPSListener;
 import ai.ia.agh.edu.pl.workshop.incprofs.sensors.SensorsListener;
 
 public class StartActivity extends Activity {
@@ -160,6 +157,12 @@ public class StartActivity extends Activity {
         // Android activity settings
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+        //wyczyść plik uczący
+        String fileName = "learningData.arff";
+        File file = new File(getFilesDir(), fileName);
+        boolean deleted = file.delete();
+        Log.d("IO", fileName + " deleted? " + deleted);
 
         // TODO: 22.01.2016 czy sensory nie powinny działać w servisach, niezależnie od życia naszej aktywności?
         //todo: może powinien pobierać nowe dane na podstawie time stampów do uczenia?

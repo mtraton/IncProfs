@@ -11,7 +11,12 @@ import com.aware.providers.Battery_Provider;
 import com.aware.providers.Locations_Provider;
 import com.aware.providers.WiFi_Provider;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+
+import ai.ia.agh.edu.pl.workshop.incprofs.learning.DataToInstances;
+import ai.ia.agh.edu.pl.workshop.incprofs.learning.SaveInstanceToFile;
+import weka.core.Instances;
 
 /**
  * Cogito ergo sum
@@ -20,7 +25,7 @@ import java.util.HashMap;
 public class SensorsListener extends BroadcastReceiver {
 
 
-    HashMap<String, Object> sensorDataInstance = new HashMap<>(); // przechowujemy pojedynczą instację danych z sensorów
+    LinkedHashMap<String, Object> sensorDataInstance = new LinkedHashMap<>(); //zapewnia kolejność "wsadzania" elementów
 
     //Cursors todo: wrzucić w jakąś strukturę danych
     //todo : zrobić domyślne dane jak dla danego sensoru nie będziemy mieli danych na początku?
@@ -37,8 +42,8 @@ public class SensorsListener extends BroadcastReceiver {
     String package_name;
 
     Cursor batteryCursor;
-    int battery_level = 0;
-    int battery_scale = 100;
+    double battery_level = 0;
+    double battery_scale = 100;
 
     Cursor gpsCursor;
     double double_latitude = 0.0; // wartość w stopniach
@@ -47,10 +52,10 @@ public class SensorsListener extends BroadcastReceiver {
     Cursor wifiCursor;
     String ssid;
 
-    long timestamp = 0;
-    long cursor_timestamp = 0; // wspólny dla wszystkich kursorów
+    double timestamp = 0;
+    double cursor_timestamp = 0; // wspólny dla wszystkich kursorów
 
-    String profile; // todo: dodać automatyczne labelowanie
+    String profile = "blank"; // todo: dodać automatyczne labelowanie
 
     // pomysł - wszystko w jednym receiverze
 
@@ -73,7 +78,7 @@ public class SensorsListener extends BroadcastReceiver {
         if (appCursor != null && appCursor.moveToFirst()) {
             application_name = appCursor.getString(appCursor.getColumnIndex("application_name"));
             package_name = appCursor.getString(appCursor.getColumnIndex("package_name"));
-            cursor_timestamp = appCursor.getLong(appCursor.getColumnIndex("timestamp"));
+            cursor_timestamp = appCursor.getDouble(appCursor.getColumnIndex("timestamp"));
 
             if (cursor_timestamp > timestamp) {
                 timestamp = cursor_timestamp;
@@ -86,9 +91,9 @@ public class SensorsListener extends BroadcastReceiver {
 
     public void getBatteryData() {
         if (batteryCursor != null && batteryCursor.moveToFirst()) {
-            battery_level = batteryCursor.getInt(batteryCursor.getColumnIndex("battery_level")); // // TODO: 04.02.2016  nie wiadomo czy tak się to nazywa
-            battery_scale = batteryCursor.getInt(batteryCursor.getColumnIndex("battery_scale"));
-            cursor_timestamp = batteryCursor.getLong(batteryCursor.getColumnIndex("timestamp"));
+            battery_level = batteryCursor.getDouble(batteryCursor.getColumnIndex("battery_level")); // // TODO: 04.02.2016  nie wiadomo czy tak się to nazywa
+            battery_scale = batteryCursor.getDouble(batteryCursor.getColumnIndex("battery_scale"));
+            cursor_timestamp = batteryCursor.getDouble(batteryCursor.getColumnIndex("timestamp"));
 
             if (cursor_timestamp > timestamp) {
                 timestamp = cursor_timestamp;
@@ -104,7 +109,7 @@ public class SensorsListener extends BroadcastReceiver {
         if (gpsCursor != null && gpsCursor.moveToFirst()) {
             double_latitude = gpsCursor.getDouble(gpsCursor.getColumnIndex("double_latitude"));
             double_longitude = gpsCursor.getDouble(gpsCursor.getColumnIndex("double_longitude"));
-            cursor_timestamp = gpsCursor.getLong(gpsCursor.getColumnIndex("timestamp"));
+            cursor_timestamp = gpsCursor.getDouble(gpsCursor.getColumnIndex("timestamp"));
 
             if (cursor_timestamp > timestamp) {
                 timestamp = cursor_timestamp;
@@ -118,7 +123,7 @@ public class SensorsListener extends BroadcastReceiver {
     public void getWiFiData() {
         if (wifiCursor != null && wifiCursor.moveToFirst()) {
             ssid = wifiCursor.getString(wifiCursor.getColumnIndex("ssid"));
-            cursor_timestamp = wifiCursor.getLong(wifiCursor.getColumnIndex("timestamp"));
+            cursor_timestamp = wifiCursor.getDouble(wifiCursor.getColumnIndex("timestamp"));
 
             if (cursor_timestamp > timestamp) {
                 timestamp = cursor_timestamp;
@@ -141,20 +146,32 @@ public class SensorsListener extends BroadcastReceiver {
         // Be sure to keep the work short inside onReceive(). Broadcasts need to return under 15 seconds, otherwise Android will interrupt it with ANR (Android Not Responding) messages.
 
         Log.d("sensors", "Sensors Listener onReceive, intent: " + intent);
+
         startCursors(c);
 
+        timestamp = 0;
+
         getAppData();
-        getBatteryData();
+        getBatteryData(); // todo: bateria generuje za dużo eventów
         getGPSData();
         getWiFiData();
 
         //very pessimistic version of Broadcast with no DB data...
         if (timestamp == 0) {
             Log.d("sensors","timestamp was 0! is everything correct in codes? timestamp:"+timestamp + " | cursor_ts:"+cursor_timestamp);
-            timestamp = System.currentTimeMillis();
+            timestamp = (double)System.currentTimeMillis();
         }
 
         saveDataToHashMap();
+        Instances instances = new DataToInstances(sensorDataInstance).sensorDataToInstance();
+
+        SaveInstanceToFile saveInstanceToFile = new SaveInstanceToFile(c);
+        try {
+            saveInstanceToFile.writeInstancesData(instances); // todo: uprościć
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         stopCursors();
     }
 
@@ -165,11 +182,11 @@ public class SensorsListener extends BroadcastReceiver {
         sensorDataInstance.put("application_name", application_name);
         sensorDataInstance.put("package_name", package_name);
         sensorDataInstance.put("battery_level", battery_level);
-        sensorDataInstance.put("battery_scale", battery_scale);
+        sensorDataInstance.put("battery_scale", battery_scale); //todo: usunąć
         sensorDataInstance.put("double_latitude", double_latitude);
         sensorDataInstance.put("double_longitude", double_longitude);
         sensorDataInstance.put("ssid", ssid);
-        sensorDataInstance.put("timestamp", ssid);  //TODO dlaczego ssid?
+        sensorDataInstance.put("timestamp", timestamp);
         sensorDataInstance.put("profile", profile);
     }
 }

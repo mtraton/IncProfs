@@ -52,11 +52,11 @@ public class LearningData {
     /*
     public LearningData(BatteryData batteryData) {
 
-        this.fvWekaAttributes = new FastVector<>(numOfAttributes);
+        this.attributes = new FastVector<>(numOfAttributes);
         for (String attributeLabel : attributeLabels) {
-            fvWekaAttributes.add(new Attribute(attributeLabel));
+            attributes.add(new Attribute(attributeLabel));
         }
-        this.instances = new Instances(instancesLabel, fvWekaAttributes, initialCapacity);
+        this.instances = new Instances(instancesLabel, attributes, initialCapacity);
         instances.setClassIndex(0); // todo: dane potrzebują dodatkowego pola z wynikiem uczenia/klasyfikacji -> tj. profilem
         this.batteryData = batteryData;
     }
@@ -136,10 +136,10 @@ public class LearningData {
 
 
                 //todo: jakoś to skrócić
-                newInstance.setValue(fvWekaAttributes.elementAt(0), batteryData.getBatteryLevelValue());
-                newInstance.setValue(fvWekaAttributes.elementAt(1), batteryData.getBatteryPercentageValue());
-                newInstance.setValue(fvWekaAttributes.elementAt(2), batteryData.getTimeStampValue());
-                newInstance.setValue(fvWekaAttributes.elementAt(3), randomClass);
+                newInstance.setValue(attributes.elementAt(0), batteryData.getBatteryLevelValue());
+                newInstance.setValue(attributes.elementAt(1), batteryData.getBatteryPercentageValue());
+                newInstance.setValue(attributes.elementAt(2), batteryData.getTimeStampValue());
+                newInstance.setValue(attributes.elementAt(3), randomClass);
                 return newInstance;
             } else {
                 return null;
