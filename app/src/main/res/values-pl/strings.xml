@@ -7,6 +7,9 @@
     <string name="textView_learning_label">Nauka</string>
     <string name="button_testing_label">Testowanie</string>
 
+    <string name="toggleButton_on_learning">Wł.</string>
+    <string name="toggleButton_off_learning">Wył.</string>
+
     <string name="go_button_label">Rozpocznij</string>
 
 </resources>

@@ -3,6 +3,7 @@ package ai.ia.agh.edu.pl.workshop.incprofs;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -28,6 +29,9 @@ public class StartActivity extends Activity {
     private ToggleButton toggle_learning;
     private static final String toggleButtonLearningState = "toggleButton_Learning_State";
 
+    private Intent learningService;
+
+    /*
     // Listeners
     //private static BatteryListener batteryListener;
     //private static GPSListener gpsListener;
@@ -153,7 +157,7 @@ public class StartActivity extends Activity {
     // Service running every X minutes
         startService(new Intent(this, EveryXTimeService.class));
     }
-
+*/
 
 
     @Override
@@ -181,15 +185,20 @@ public class StartActivity extends Activity {
                 if (isChecked) {
                     // The toggle is enabled
                     Log.d("StartActivity", "toggle On");
-                    startSensors();
+                    //startSensors();
+                    learningService = new Intent(getApplicationContext(), LearningService.class);
+                    startService(learningService);
                 } else {
                     // The toggle is disabled
                     Log.d("StartActivity", "toggle Off");
-                    stopSensors();
+                    //stopSensors();
+                    if(learningService!=null) {
+                        stopService(learningService);
+                    }
                 }
             }
         });
-
+        LoadPreferences();
     }
 
     @Override
@@ -197,7 +206,7 @@ public class StartActivity extends Activity {
         Log.d("StartActivity", "onDestroy()");
 
         super.onDestroy();
-        stopSensors();
+        //stopSensors();
     }
 
     @Override
@@ -207,6 +216,8 @@ public class StartActivity extends Activity {
         return true;
     }
 
+
+/*
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         Log.d("StartActivity", "onSaveInstanceState()");
@@ -214,13 +225,33 @@ public class StartActivity extends Activity {
 
         super.onSaveInstanceState(savedInstanceState);
     }
-
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         Log.d("StartActivity", "onRestoreInstanceState()");
         super.onRestoreInstanceState(savedInstanceState);
 
         toggle_learning.setChecked(savedInstanceState.getBoolean(toggleButtonLearningState, false));
+    }
+*/
+
+
+    private void SavePreferences() {
+        Log.d("StartActivity", "SavePreferences()");
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(toggleButtonLearningState, toggle_learning.isChecked());
+        editor.commit();
+    }
+    private void LoadPreferences(){
+        Log.d("StartActivity", "LoadPreferences()");
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        Boolean state = sharedPreferences.getBoolean(toggleButtonLearningState, false);
+        toggle_learning.setChecked(state);
+    }
+    @Override
+    public void onBackPressed() {
+        SavePreferences();
+        super.onBackPressed();
     }
 
 
