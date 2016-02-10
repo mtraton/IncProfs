@@ -94,7 +94,7 @@ public class SaveInstanceToFile {
                 {
                     //2.  Dodaj nową instację
 
-                    prevInstances.add(instances.get(0)); // TODO spierdoliło się koncertowo
+                    prevInstances.add(instances.get(0));
                 }
                 // 3. Zapisz instancje do pliku
 

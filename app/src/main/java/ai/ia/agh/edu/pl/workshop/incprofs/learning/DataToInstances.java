@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import ai.ia.agh.edu.pl.workshop.incprofs.sensors.Profiles;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instances;
@@ -32,6 +33,9 @@ public class DataToInstances {
     int numOfAttributes;
     int currentAttributeNum;
 
+    Profiles profiles;
+    ArrayList<String> profileNames;
+
     // Dane wejściowe
     LinkedHashMap<String, Object> sensorData;
 
@@ -39,6 +43,8 @@ public class DataToInstances {
     {
         currentAttributeNum = 0;
         this.sensorData = sensorData;
+        profiles = new Profiles();
+        profileNames= new ArrayList<String>(profiles.getProfilesMap().values());
 
     }
 
@@ -56,13 +62,22 @@ public class DataToInstances {
 
                 if (value != null) {
                     if (value instanceof String) {
+                        if(key.equals("profile"))
+                        {
 
-                        //żeby stworzyć atrybut typu String trzeba się posłużyć taką konstrukcją
-                        attributes.add(new Attribute(key, (List<String>) null, attrNumber));
+                            attributes.add(new Attribute(key, profileNames, attrNumber));
+                            Log.d("IO", "nominal");
+                        }
+                        else{
+                            //żeby stworzyć atrybut typu String trzeba się posłużyć taką konstrukcją
+                            attributes.add(new Attribute(key, (List<String>) null, attrNumber));
+                        }
+
+
                     }
                     else if (value instanceof Date)
                     {
-                        attributes.add(new Attribute(key,"yyyy-MM-dd HH:mm:ss"));//todo:możliwe źródło błędów
+                        attributes.add(new Attribute(key,"yyyy-MM-dd HH:mm:ss", attrNumber));//todo:możliwe źródło błędów
                     }
                    // jeśli dana nie jest Stringiem to musi być doublem -> atrybutem typu numeric
                     else {
@@ -99,16 +114,28 @@ public class DataToInstances {
             for (Map.Entry<String, Object> entry : sensorData.entrySet()) {
 
                 Object value = entry.getValue();
-
+                String key = entry.getKey();
 
                
                 if (value != null) {
                     if (value instanceof String) {
-                        String stringValue = (String) value;
-                        //int attIndex = attributes.get(currentAttributeNum).index();
-                        //newInstance.setValue(attributes.get(currentAttributeNum), stringValue);
-                        // konwertuje tutaj przy ustawianiu string na double = 0
-                        vals[currentAttributeNum] = data.attribute(currentAttributeNum).addStringValue(stringValue);
+                        if(key.equals("profile"))
+                        {
+                            // nominal attribute
+                            vals[currentAttributeNum] = profileNames.indexOf(value);
+                        }
+                        else
+                        {
+                            String stringValue = (String) value;
+
+                            //int attIndex = attributes.get(currentAttributeNum).index();
+                            //newInstance.setValue(attributes.get(currentAttributeNum), stringValue);
+                            // konwertuje tutaj przy ustawianiu string na double = 0
+
+                            vals[currentAttributeNum] = data.attribute(currentAttributeNum).addStringValue(stringValue);
+
+                        }
+
                     }
                     else if (value instanceof Date)
                     {

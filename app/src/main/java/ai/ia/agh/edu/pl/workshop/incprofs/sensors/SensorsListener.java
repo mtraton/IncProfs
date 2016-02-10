@@ -26,20 +26,11 @@ import weka.core.Instances;
  */
 public class SensorsListener extends BroadcastReceiver {
 
-    public SensorsListener() // todo: możliwe źródło błędów
-    {
-        createProfileMap();
-    }
+
 
     LinkedHashMap<String, Object> sensorDataInstance = new LinkedHashMap<>(); //zapewnia kolejność "wsadzania" elementów
 
-    String profileNames [] = {"morning", "work", "afterwork", "night"};
-
-    public enum Day {
-        MORNING, WORK, AFTERWORK, NIGHT
-    }
-
-    LinkedHashMap<Day,String> profilesMap = new LinkedHashMap<>();
+    Profiles profiles;
 
 
     //Cursors todo: wrzucić w jakąś strukturę danych
@@ -179,14 +170,14 @@ public class SensorsListener extends BroadcastReceiver {
         }
 
         saveDataToHashMap();
-//        Instances instances = new DataToInstances(sensorDataInstance).sensorDataToInstance();
-//
-//        SaveInstanceToFile saveInstanceToFile = new SaveInstanceToFile(c);
-//        try {
-//            saveInstanceToFile.writeInstancesData(instances); // todo: uprościć
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        Instances instances = new DataToInstances(sensorDataInstance).sensorDataToInstance();
+
+        SaveInstanceToFile saveInstanceToFile = new SaveInstanceToFile(c);
+        try {
+            saveInstanceToFile.writeInstancesData(instances); // todo: uprościć
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         stopCursors();
     }
@@ -206,15 +197,7 @@ public class SensorsListener extends BroadcastReceiver {
         sensorDataInstance.put("profile", chooseLabel(timestamp));
     }
 
-    public void createProfileMap()
-    {
-        int stringIndex = 0;
-        for(Day d : Day.values())
-        {
-            profilesMap.put(d, profileNames[stringIndex]);
-            stringIndex++;
-        }
-    }
+
 
 
 
@@ -230,21 +213,22 @@ public class SensorsListener extends BroadcastReceiver {
         System.out.println(formattedDate);
         int hour = date.getHours();//c.get(Calendar.HOUR_OF_DAY);
 
+        LinkedHashMap<Profiles.Day, String> profilesMap = new Profiles().getProfilesMap();
         if (hour >= 6 && hour < 8)
         {
-            return profilesMap.get(Day.MORNING);
+            return profilesMap.get(Profiles.Day.MORNING);
         }
         else if(hour >= 8 && hour <= 16) // at work
         {
-            return profilesMap.get(Day.WORK);
+            return profilesMap.get(Profiles.Day.WORK);
         }
         else if(hour > 16 &&  hour <= 22)
         {
-            return profilesMap.get(Day.AFTERWORK);
+            return profilesMap.get(Profiles.Day.AFTERWORK);
         }
         else
         {
-            return profilesMap.get(Day.NIGHT);
+            return profilesMap.get(Profiles.Day.NIGHT);
         }
 
 
