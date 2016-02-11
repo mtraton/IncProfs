@@ -2,10 +2,15 @@ package ai.ia.agh.edu.pl.workshop.incprofs.learning;
 
 import android.util.Log;
 
+import java.io.File;
+import java.io.IOException;
+
 import moa.classifiers.Classifier;
-import moa.classifiers.trees.HoeffdingTree;
+import moa.classifiers.trees.HoeffdingAdaptiveTree;
 import moa.streams.ArffFileStream;
 import weka.core.Instance;
+
+import static moa.core.SerializeUtils.writeToFile;
 
 /**
  * Created by Rael on 21.01.2016.
@@ -17,7 +22,7 @@ import weka.core.Instance;
  */
 public class Learner {
 
-    private static Classifier learner;
+    private static HoeffdingAdaptiveTree learner;
     ArffFileStream stream;
     String streamFilePath;
 
@@ -42,7 +47,7 @@ public class Learner {
     public void prepareLearner() {
         if(learner == null)
         {
-            learner = new HoeffdingTree();
+            learner = new HoeffdingAdaptiveTree();
             learner.setModelContext(stream.getHeader()); // błąd - możliwa różnica w headerach ARFF?
 
             //todo class index?
@@ -61,7 +66,10 @@ public class Learner {
 
             Instance trainInst = stream.nextInstance();
             Log.d("moa", "class value = " + trainInst.classValue()); // zwraca 0 zamiast blank
-            learner.trainOnInstance(trainInst);
+            learner.trainOnInstanceImpl(trainInst); // Trains this classifier incrementally using the given instance.
+            HoeffdingAdaptiveTree tree = new HoeffdingAdaptiveTree();
+            //tree.trainOnInstanceImpl();
+
             /*
             Method threw 'java.lang.NullPointerException' exception. Cannot evaluate moa.classifiers.trees.HoeffdingTree$LearningNodeNBAdaptive.toString()
 
@@ -71,6 +79,16 @@ public class Learner {
 
         Log.d("ML", "Learning done!");
         return learner;
+    }
+
+    public void saveClassfierToFile(String path)
+    {
+        File f = new File(path);
+        try {
+            writeToFile(f, learner);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public double testLearningAccuracy() {

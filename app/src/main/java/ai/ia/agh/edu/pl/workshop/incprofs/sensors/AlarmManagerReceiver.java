@@ -22,40 +22,46 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
     public void onReceive(Context c, Intent intent) {
 
-
-
-
         Log.d("EveryXTime+Receiver", "onReceive, countdown complete: X min passed!");
 
-        //todo: ucz się z pliku
         //1. Stwórz ścieżkę do pliku
-        String arffFileName =  c.getResources().getString (R.string.arff_file_name);
-
-        String filepath = c.getFilesDir().toString() + "/" + arffFileName;
+        String inputDataFileName =  c.getResources().getString (R.string.arff_file_name);
+        String filepath = c.getFilesDir().toString() + "/" + inputDataFileName;
 
         //1.a czy plik istnieje?
 
-        File file = new File(filepath);
+        File inputDataFile = new File(filepath);
         //todo: kod opiera się na założeniu, że
-        if(file.exists()) {
-            String fileContent = readFile(arffFileName, c);
+        if(inputDataFile.exists()) {
+            String fileContent = readFile(inputDataFileName, c);
+            
             // 2. Naucz się
             Learner learner = new Learner(filepath);
            learner.learnOnStream();
 
             //3. Usuń plik
             //File file = new File(c.getFilesDir(), arffFileName);
-            boolean deleted = file.delete();
-            Log.d("IO", arffFileName + " deleted? " + deleted);
-            //Toast.makeText(c, "onReceive, countdown complete: 15 min passed!", Toast.LENGTH_LONG).show();
+            boolean deleted = inputDataFile.delete();
+            Log.d("IO", inputDataFileName + " deleted? " + deleted);
+
+            //4. Zapisz klasyfikator do pliku
+            String outputClassifierFileName = c.getResources().getString (R.string.classifier_file_name);
+            String outputClassifierFilePath = c.getFilesDir() + "/" + outputClassifierFileName;
+            //File outputClassifierFile = new File(outputClassifierFilePath);
+            learner.saveClassfierToFile(outputClassifierFilePath);
+            String savingTest = readFile(outputClassifierFileName,c);
+            Log.d("IO", "classifier saved");
+
+            
+        
         }
         else
         {
             Log.d("Learning/IO", "No file to learn from!");
         }
 
-        //todo: zwróć klasyfikator
-        // np. zapisz do pliku
+      
+       
     }
 
     private String readFile(String fileName, Context c)   {

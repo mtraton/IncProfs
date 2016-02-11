@@ -79,7 +79,7 @@ public class DataToInstances {
                     {
                         attributes.add(new Attribute(key,"yyyy-MM-dd HH:mm:ss", attrNumber));//todo:możliwe źródło błędów
                     }
-                   // jeśli dana nie jest Stringiem to musi być doublem -> atrybutem typu numeric
+                   // jeśli dana nie jest żadnym z powyższych typów to musi być doublem -> atrybutem typu numeric
                     else {
                         attributes.add(new Attribute(key, attrNumber));//
                     }
