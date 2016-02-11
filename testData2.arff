@@ -1,0 +1,22 @@
+@relation ProfileLearning
+
+@attribute application_name string
+@attribute package_name string
+@attribute battery_level numeric
+@attribute double_latitude numeric
+@attribute double_longitude numeric
+@attribute ssid string
+@attribute timestamp date 'yyyy-MM-dd HH:mm:ss'
+@attribute profile {morning,work,afterwork,night}
+
+@data
+Facebook,com.facebook.katana,100,50.015511,19.892512,'\"UPC9890080\"','2016-02-11 18:33:12',afterwork
+Facebook,com.facebook.katana,100,50.015523,19.89252,'\"UPC9890080\"','2016-02-11 18:33:58',afterwork
+Facebook,com.facebook.katana,100,50.015545,19.892575,'\"UPC9890080\"','2016-02-11 18:34:51',afterwork
+IncProfs,ai.ia.agh.edu.pl.workshop.incprofs,100,50.0155,19.892506,'\"UPC9890080\"','2016-02-11 18:39:20',afterwork
+IncProfs,ai.ia.agh.edu.pl.workshop.incprofs,100,50.015503,19.892517,'\"UPC9890080\"','2016-02-11 18:41:20',afterwork
+IncProfs,ai.ia.agh.edu.pl.workshop.incprofs,100,50.015489,19.892496,'\"UPC9890080\"','2016-02-11 18:41:32',afterwork
+'Interf. sys.',com.android.systemui,100,50.015548,19.892577,'\"UPC9890080\"','2016-02-11 18:50:05',afterwork
+'Interf. sys.',com.android.systemui,100,50.015514,19.892516,'\"UPC9890080\"','2016-02-11 18:50:06',afterwork
+'Interf. sys.',com.android.systemui,100,50.01556,19.892594,'\"UPC9890080\"','2016-02-11 18:50:06',afterwork
+'Interf. sys.',com.android.systemui,100,50.015538,19.892563,'\"UPC9890080\"','2016-02-11 18:50:26',afterwork
