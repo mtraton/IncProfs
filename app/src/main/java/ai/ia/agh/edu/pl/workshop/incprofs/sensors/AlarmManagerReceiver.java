@@ -51,7 +51,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
             //5. Opcjonalny test klasyfikatora
             //todo: czemu nie widzi wrzuconego przeze mnie pliku?
-           /*
+            /*
             String tmpPath = "/testData.arff";
             String testDataFilePath = c.getFilesDir().getAbsolutePath() + "/" + c.getResources().getString(R.string.test_file_name);
             //String testDataFilePath = inputDataFile.getPath();

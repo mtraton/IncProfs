@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.aware.Applications;
@@ -28,6 +29,8 @@ import ai.ia.agh.edu.pl.workshop.incprofs.sensors.SensorsListener;
 public class StartActivity extends Activity {
 
     private ToggleButton toggle_learning;
+    private TextView textView_output;
+
     private static final String toggleButtonLearningState = "toggleButton_Learning_State";
 
     private Intent learningService;
@@ -180,6 +183,8 @@ public class StartActivity extends Activity {
 
         //startSensors();
 
+        textView_output = (TextView) findViewById(R.id.textView_output);
+
         toggle_learning = (ToggleButton) findViewById(R.id.toggleButton_learning);
         toggle_learning.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -199,6 +204,7 @@ public class StartActivity extends Activity {
                 }
             }
         });
+
         LoadPreferences();
     }
 
@@ -255,6 +261,20 @@ public class StartActivity extends Activity {
         super.onBackPressed();
     }
 
+
+
+    public void printOutput(String out) {
+        Log.d("StartActivity", "printOutput(" + out + ")");
+
+        if(textView_output != null) {
+
+            if(out==null || out.equals("")) {
+                textView_output.setText(R.string.textView_output_no);
+            } else {
+                textView_output.setText(out);
+            }
+        }
+    }
 
     /*
     @+id/button_testing

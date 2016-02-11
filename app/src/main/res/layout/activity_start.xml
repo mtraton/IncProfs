@@ -52,17 +52,19 @@ tools:context=".StartActivity" >
         android:text="@string/button_testing_label" />
 
 
+    <TextView
+        android:id="@+id/textView_output"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
-    <Button
-        android:id="@+id/go_button"
-        style="@style/AppTheme"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+
+        android:padding="15dp"
         android:layout_below="@+id/button_testing"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-        android:onClick="startQuiz"
-        android:background="@drawable/button"
-        android:text="@string/go_button_label" />
+
+        android:textSize="20sp"
+        android:text="@string/textView_output_no" />
+
+
 
 </RelativeLayout>
