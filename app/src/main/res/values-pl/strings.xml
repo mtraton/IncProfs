@@ -4,6 +4,7 @@
     <string name="app_name">IncProfs</string>
     <string name="action_settings">Ustawienia</string>
 
+    <string name="textView_output_no">Nic do wyświetlenia.</string>
     <string name="textView_learning_label">Nauka</string>
     <string name="button_testing_label">Testowanie</string>
 
