@@ -10,6 +10,7 @@ import moa.classifiers.trees.HoeffdingAdaptiveTree;
 import moa.streams.ArffFileStream;
 import weka.core.Instance;
 
+import static moa.core.SerializeUtils.readFromFile;
 import static moa.core.SerializeUtils.writeToFile;
 
 /**
@@ -62,14 +63,11 @@ public class Learner {
 
     public Classifier learnOnStream() {
 
-        while (stream.hasMoreInstances()) {//// TODO: 22.01.2016 usunąć
+        while (stream.hasMoreInstances()) {
 
             Instance trainInst = stream.nextInstance();
-            Log.d("moa", "class value = " + trainInst.classValue()); // zwraca 0 zamiast blank
+            Log.d("Learning", "class value = " + trainInst.classValue()); // zwraca 0 zamiast blank
             learner.trainOnInstanceImpl(trainInst); // Trains this classifier incrementally using the given instance.
-            HoeffdingAdaptiveTree tree = new HoeffdingAdaptiveTree();
-            //tree.trainOnInstanceImpl();
-
             /*
             Method threw 'java.lang.NullPointerException' exception. Cannot evaluate moa.classifiers.trees.HoeffdingTree$LearningNodeNBAdaptive.toString()
 
@@ -77,7 +75,7 @@ public class Learner {
 
         }
 
-        Log.d("ML", "Learning done!");
+        Log.d("Learning", "Learning done!");
         return learner;
     }
 
@@ -94,9 +92,9 @@ public class Learner {
     public double testLearningAccuracy() {
         int numberSamplesCorrect = 0;
         int numberSamples = 0;
-        long numInstances = stream.estimatedRemainingInstances(); //todo: możliwe źródło błędów
+        //long numInstances = stream.estimatedRemainingInstances(); //todo: możliwe źródło błędów
 
-        while ((stream.hasMoreInstances()) && (numberSamples < numInstances)) {
+        while (stream.hasMoreInstances() )  {//&& (numberSamples < numInstances))
             Instance trainInst = stream.nextInstance();
 
             if (learner.correctlyClassifies(trainInst)) {
@@ -111,6 +109,26 @@ public class Learner {
         Log.d("ML", "Accuracy calculated! " + learningAccuracy);
 
         return learningAccuracy;
+    }
+
+    public void testClassifierFromFile(String classifierFilePath)
+    {
+        //1. Wczytaj klasyfikator
+        File classifierFile = new File(classifierFilePath);
+        Object o = null;
+        try {
+            o = readFromFile(classifierFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        HoeffdingAdaptiveTree testedClassifier = (HoeffdingAdaptiveTree) o;
+
+        learner = testedClassifier;
+        testLearningAccuracy();
+
+
     }
 
 

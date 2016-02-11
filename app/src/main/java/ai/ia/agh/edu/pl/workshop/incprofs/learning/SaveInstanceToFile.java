@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
+import ai.ia.agh.edu.pl.workshop.incprofs.R;
 import weka.core.Instances;
 
 /**
@@ -21,7 +22,7 @@ import weka.core.Instances;
 public class SaveInstanceToFile {
 
 
-        String fileName = "learningData.arff";
+        String fileName;
        // String arfffExtension = "";
         File instanceFile;
         private static String instanceFilePath; //todo: to musi być widoczne spoza klasy
@@ -31,6 +32,7 @@ public class SaveInstanceToFile {
         Instances dataSet;
 
         // constructor
+
 
 
     public static Instances getInstanceFromFile(String pFileName)
@@ -64,6 +66,7 @@ public class SaveInstanceToFile {
     public SaveInstanceToFile(Context c)
     {
         this.c = c;
+        fileName = c.getResources().getString(R.string.arff_file_name);
     }
 
 
@@ -135,6 +138,10 @@ public class SaveInstanceToFile {
             scanner = new Scanner(f);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return null;
+
+
+
         }
         String lineSeparator = System.getProperty("line.separator");
 

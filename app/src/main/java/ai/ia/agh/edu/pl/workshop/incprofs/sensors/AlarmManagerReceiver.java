@@ -26,23 +26,20 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
         //1. Stwórz ścieżkę do pliku
         String inputDataFileName =  c.getResources().getString (R.string.arff_file_name);
-        String filepath = c.getFilesDir().toString() + "/" + inputDataFileName;
+        String inputDataFilePath = c.getFilesDir().toString() + "/" + inputDataFileName;
 
         //1.a czy plik istnieje?
 
-        File inputDataFile = new File(filepath);
+        File inputDataFile = new File(inputDataFilePath);
         //todo: kod opiera się na założeniu, że
         if(inputDataFile.exists()) {
             String fileContent = readFile(inputDataFileName, c);
             
             // 2. Naucz się
-            Learner learner = new Learner(filepath);
+            Learner learner = new Learner(inputDataFilePath);
            learner.learnOnStream();
 
-            //3. Usuń plik
-            //File file = new File(c.getFilesDir(), arffFileName);
-            boolean deleted = inputDataFile.delete();
-            Log.d("IO", inputDataFileName + " deleted? " + deleted);
+
 
             //4. Zapisz klasyfikator do pliku
             String outputClassifierFileName = c.getResources().getString (R.string.classifier_file_name);
@@ -52,8 +49,21 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
             String savingTest = readFile(outputClassifierFileName,c);
             Log.d("IO", "classifier saved");
 
-            
-        
+            //5. Opcjonalny test klasyfikatora
+            //todo: czemu nie widzi wrzuconego przeze mnie pliku?
+            //String testDataFilePath = c.getFilesDir() + "/" + c.getResources().getString(R.string.test_file_name);
+            //String testDataFilePath = inputDataFile.getPath();
+            Learner testLearner = new Learner(inputDataFilePath);
+            testLearner.testClassifierFromFile(outputClassifierFilePath);
+
+
+
+
+            //3. Usuń plik
+            //File file = new File(c.getFilesDir(), arffFileName);
+            boolean deleted = inputDataFile.delete();
+            Log.d("IO", inputDataFileName + " deleted? " + deleted);
+
         }
         else
         {

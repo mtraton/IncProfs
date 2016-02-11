@@ -12,6 +12,7 @@
 
     <string name="go_button_label">Start</string>
     
-    <string name="arff_file_name">learningData.arff</string>
+    <string name="arff_file_name">trainingData.arff</string>
+    <string name="test_file_name">testData.arff</string>
     <string name="classifier_file_name">adaptiveVFDTClassifier.dat</string>
 </resources>
