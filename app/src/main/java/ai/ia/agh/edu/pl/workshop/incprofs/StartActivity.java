@@ -1,29 +1,22 @@
 package ai.ia.agh.edu.pl.workshop.incprofs;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 import android.widget.ToggleButton;
-
-import com.aware.Applications;
-import com.aware.Aware;
-import com.aware.Aware_Preferences;
-import com.aware.Battery;
-import com.aware.Locations;
-import com.aware.WiFi;
 
 import java.io.File;
 import java.io.IOException;
 
-import ai.ia.agh.edu.pl.workshop.incprofs.sensors.AlarmManagerReceiver;
-import ai.ia.agh.edu.pl.workshop.incprofs.sensors.EveryXTimeService;
-import ai.ia.agh.edu.pl.workshop.incprofs.sensors.SensorsListener;
+import ai.ia.agh.edu.pl.workshop.incprofs.learning.Learner;
 
 public class StartActivity extends Activity {
 
@@ -261,6 +254,41 @@ public class StartActivity extends Activity {
      */
     public void startTesting(View view) {
         Log.d("StartActivity", "button testing pressed: startTesting()");
+        // Test zapisanego podczas uczenia klasyfikatora
+
+        // zakładamy że plik testowy nazywa się testData.arff i znajduje się w katalogu głównym karty SD
+        // z niewiadomych przyczyn nie udaje się odczytać pliku wrzuconego do folderu files aplikacji
+        String testDataFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + getResources().getString(R.string.test_file_name);
+        String outputClassifierFileName = getResources().getString (R.string.classifier_file_name);
+        String outputClassifierFilePath = getFilesDir() + File.separator + outputClassifierFileName; // todo: możliwe źródło błędów
+
+        File testDataFile = new File(testDataFilePath);
+        File classifierFile = new File(outputClassifierFilePath);
+        if(testDataFile.exists() && classifierFile.exists())
+        {
+            Learner testLearner = new Learner(testDataFilePath);
+            double accuracy = testLearner.testClassifierFromFile(outputClassifierFilePath);
+
+            //todo: wrzucić w osobną funkcję
+            Context context = getApplicationContext();
+            CharSequence text = "Dokładność klasyfikatora : " + accuracy + "%.";
+            int duration = Toast.LENGTH_LONG;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
+        else
+        {
+            Context context = getApplicationContext();
+            CharSequence text = "Nie można testować\n" + "Brak pliku z klasyfikatorem lub danymi testowymi";
+            int duration = Toast.LENGTH_LONG;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
+
+
+
     }
 
 

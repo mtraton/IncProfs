@@ -36,11 +36,13 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
             String fileContent = readFile(inputDataFileName, c);
             
             // 2. Naucz się
-            Learner learner = new Learner(inputDataFilePath);
+            long startTime = System.currentTimeMillis();
+
+           Learner learner = new Learner(inputDataFilePath);
            learner.learnOnStream();
 
-
-
+           double duration = (System.currentTimeMillis() - startTime)/1000.0;
+            Utils.showToast("Czas trwania nauki:" + duration + "sekund", c);
             //4. Zapisz klasyfikator do pliku
             String outputClassifierFileName = c.getResources().getString (R.string.classifier_file_name);
             String outputClassifierFilePath = c.getFilesDir() + "/" + outputClassifierFileName;
@@ -48,19 +50,6 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
             learner.saveClassfierToFile(outputClassifierFilePath);
             String savingTest = readFile(outputClassifierFileName,c);
             Log.d("IO", "classifier saved");
-
-            //5. Opcjonalny test klasyfikatora
-            //todo: czemu nie widzi wrzuconego przeze mnie pliku?
-           /*
-            String tmpPath = "/testData.arff";
-            String testDataFilePath = c.getFilesDir().getAbsolutePath() + "/" + c.getResources().getString(R.string.test_file_name);
-            //String testDataFilePath = inputDataFile.getPath();
-            String  filenames [] = c.getFilesDir().list();
-            Learner testLearner = new Learner(tmpPath);
-            testLearner.testClassifierFromFile(outputClassifierFilePath);
-            */
-
-
 
             //3. Usuń plik
             //File file = new File(c.getFilesDir(), arffFileName);

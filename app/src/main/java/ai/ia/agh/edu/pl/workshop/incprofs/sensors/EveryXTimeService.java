@@ -26,6 +26,7 @@ public class EveryXTimeService extends Service {
     private Intent AMT_Intent = new Intent(AMT_PING);
     private BroadcastReceiver AMT_BroadcastReceiver = new AlarmManagerReceiver();
 
+    private static int interval = 1000 * 60 * 2; // 1000 ms * 60 s * 2 = 2 min
 
     @Override
     public void onCreate() {
@@ -45,8 +46,8 @@ public class EveryXTimeService extends Service {
         ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setRepeating(
                 AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis(),
-                1000 * 60 * 2,
-                AMT_PendingIntent); //todo: możliwe źródło błędów
+                interval,
+                AMT_PendingIntent);
 
         /*
         // Each and every 15 minutes will trigger onReceive of your BroadcastReceiver

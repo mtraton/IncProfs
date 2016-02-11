@@ -3,8 +3,9 @@ package ai.ia.agh.edu.pl.workshop.incprofs.sensors;
 import java.util.LinkedHashMap;
 
 /**
- * Cogito ergo sum
+ *
  * Created by Rael on 10.02.2016.
+ * Pomocnicza klasa przechowująca nazwy profili
  */
 public class Profiles {
     String profileNames [] = {"morning", "work", "afterwork", "night"};

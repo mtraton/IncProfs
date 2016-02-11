@@ -188,12 +188,11 @@ public class SensorsListener extends BroadcastReceiver {
 
         sensorDataInstance.put("application_name", application_name);
         sensorDataInstance.put("package_name", package_name);
-        sensorDataInstance.put("battery_level", battery_level);
-        sensorDataInstance.put("battery_scale", battery_scale); //todo: usunąć
+        sensorDataInstance.put("battery_level", battery_level); // procentowy stopień naładowania baterii
         sensorDataInstance.put("double_latitude", double_latitude);
         sensorDataInstance.put("double_longitude", double_longitude);
         sensorDataInstance.put("ssid", ssid);
-        sensorDataInstance.put("timestamp", new DataUtil().timeStampToDate(timestamp));
+        sensorDataInstance.put("timestamp", new Utils().timeStampToDate(timestamp));
         sensorDataInstance.put("profile", chooseLabel(timestamp));
     }
 
@@ -203,7 +202,7 @@ public class SensorsListener extends BroadcastReceiver {
 
     public String chooseLabel(double timestamp)
     {
-        Date date = new DataUtil().timeStampToDate(timestamp);
+        Date date = new Utils().timeStampToDate(timestamp);
         //Calendar c = Calendar.getInstance();
         //c.setTime(date);
 

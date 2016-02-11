@@ -79,6 +79,7 @@ public class LearningService extends Service {
         Log.d("sensors", "Activate Battery");
         Aware.setSetting(this, Aware_Preferences.STATUS_BATTERY, true);
 
+
         Log.d("sensors", "Apply Battery settings");
         Aware.startSensor(this, Aware_Preferences.STATUS_BATTERY);
     }
@@ -112,6 +113,7 @@ public class LearningService extends Service {
         //Activate applications
         Log.d("AWARE", "Activate Apps");
         Aware.setSetting(this, Aware_Preferences.STATUS_APPLICATIONS, true);
+       // Aware.setSetting(this. Aware_Preferences.STATUS_APPLICATIONS, true);
         //Apply settings
         Log.d("AWARE", "Apply Apps settings");
         Aware.startSensor(this, Aware_Preferences.STATUS_APPLICATIONS);
@@ -125,7 +127,6 @@ public class LearningService extends Service {
         sensorsFilter.addAction(Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND);
         sensorsFilter.addAction(Battery.ACTION_AWARE_BATTERY_CHANGED);
         sensorsFilter.addAction(Locations.ACTION_AWARE_LOCATIONS);
-        //sensorsFilter.addAction(WiFi.ACTION_AWARE_WIFI_NEW_DEVICE);//todo: jaki broadcast jest najodpowiedniejszy?
         sensorsFilter.addAction(WiFi.ACTION_AWARE_WIFI_SCAN_STARTED);
 
         registerReceiver(sensorsListener, sensorsFilter);
@@ -141,16 +142,9 @@ public class LearningService extends Service {
 
         // LOKALIZACJA UŻYTKOWNIKA
         startGPSSensor();
-        // startGPSListener();
-
-
-        // AKTYWNOŚĆ UŻYTKOWNIKA
 
         // APLIKACJE
         startApplicationSensor();
-        // startApplicationListener();
-
-        // PORA DNIA
 
         // SIEĆ WIFI DO KTÓREJ JEST PODŁĄCZONY
         startWifiSensor();
