@@ -44,8 +44,8 @@ public class SensorsListener extends BroadcastReceiver {
     String activity_name; // unknown, tilting, on_foot, in_vehicle, on_bicycle, running, walking
 
     Cursor appCursor;
-    String application_name;
-    String package_name;
+    String application_name="";
+    String package_name="";
 
     Cursor batteryCursor;
     double battery_level = 0;
@@ -56,7 +56,7 @@ public class SensorsListener extends BroadcastReceiver {
     double double_longitude = 0.0;
 
     Cursor wifiCursor;
-    String ssid;
+    String ssid="";
 
     double timestamp = 0;
     double cursor_timestamp = 0; // wspólny dla wszystkich kursorów

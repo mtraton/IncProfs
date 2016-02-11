@@ -14,6 +14,7 @@ import ai.ia.agh.edu.pl.workshop.incprofs.sensors.Profiles;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instances;
+import weka.core.Utils;
 
 /**
  * Created by Rael on 04.02.2016.
@@ -152,19 +153,20 @@ public class DataToInstances {
                         }
                     }
                     //musi i tak przekonwertować na double
-                    else { //todo: możliwe źródło błędu
+                    else {
 
-                        double doubleValue = (double) value; // WTF wcześniej działało
+                        double doubleValue = (double) value;
                         vals[currentAttributeNum] = doubleValue;
 
                         //int attIndex = attributes.get(currentAttributeNum).index();
                         //newInstance.setValue(attributes.get(currentAttributeNum), doubleValue);
                     }
-                    //// TODO: 10.02.2016  data i klasa jako inne typy
+
 
 
                 } else {
                     Log.d("IO", "Sensor data part is null"); // // TODO: 08.02.2016  co jeśli dana jest nullem
+                    vals[currentAttributeNum] = Utils.missingValue();
                 }
                 currentAttributeNum++;
 
