@@ -1,7 +1,10 @@
 package ai.ia.agh.edu.pl.workshop.incprofs;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,8 +29,11 @@ public class StartActivity extends Activity {
     private TextView textView_output;
 
     private static final String toggleButtonLearningState = "toggleButton_Learning_State";
-
     private Intent learningService;
+
+    public static final String GUIUpdateIntentLabel = "GUIUpdateIntentLabel";
+    public static final String GUIUpdateKey = "GUIUpdateKey";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,7 @@ public class StartActivity extends Activity {
         //wyczyść plik uczący aby zapobiec błędom przy wczytywaniu danych
         cleanLearningDataFile();
 
+        registerReceiver(uiUpdated, new IntentFilter(GUIUpdateIntentLabel));
 
 
         textView_output = (TextView) findViewById(R.id.textView_output);
@@ -72,6 +79,7 @@ public class StartActivity extends Activity {
         Log.d("StartActivity", "onDestroy()");
 
         super.onDestroy();
+        unregisterReceiver(uiUpdated);
     }
 
     @Override
@@ -173,4 +181,16 @@ public class StartActivity extends Activity {
 
     }
 
+
+
+    private BroadcastReceiver uiUpdated = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            //TODO Update text here!
+            //TextView.setText(intent.getExtras().getString("<KEY>"))
+            printOutput("Przykładowy text:\n"+intent.getExtras().getString(GUIUpdateKey));
+        }
+    };
 }

@@ -8,6 +8,7 @@ import android.util.Log;
 import java.io.File;
 
 import ai.ia.agh.edu.pl.workshop.incprofs.R;
+import ai.ia.agh.edu.pl.workshop.incprofs.StartActivity;
 import ai.ia.agh.edu.pl.workshop.incprofs.learning.Learner;
 
 /**
@@ -20,13 +21,19 @@ public class LearningSignalReceiver extends BroadcastReceiver {
 
         Log.d("EveryXTime+Receiver", "onReceive, countdown complete: X min passed!");
 
+        //TODO: gdzieś tutaj ma być wysłanie broadcasta do GUI
+        Intent gui_update = new Intent(StartActivity.GUIUpdateIntentLabel);
+        gui_update.putExtra(StartActivity.GUIUpdateKey, "text");
+
+        c.sendBroadcast(gui_update);
+    //
+
         //1. Stwórz ścieżkę do pliku z danymi uczącymi
         String inputDataFileName = c.getResources().getString(R.string.arff_file_name);
         String inputDataFilePath = c.getFilesDir().toString() + "/" + inputDataFileName;
         File inputDataFile = new File(inputDataFilePath);
 
         //1.a Sprawdź czy plik istnieje
-
         if (inputDataFile.exists()) {
 
             Utils utils = new Utils();
