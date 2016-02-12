@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -38,7 +39,10 @@ public class StartActivity extends Activity {
         //wyczyść plik uczący aby zapobiec błędom przy wczytywaniu danych
         cleanLearningDataFile();
 
+
+
         textView_output = (TextView) findViewById(R.id.textView_output);
+        textView_output.setMovementMethod(new ScrollingMovementMethod());
 
         toggle_learning = (ToggleButton) findViewById(R.id.toggleButton_learning);
         toggle_learning.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -143,7 +147,6 @@ public class StartActivity extends Activity {
             text = text + out.toString() + "\n";
             double accuracy = testLearner.testClassifierFromFile(outputClassifierFilePath);
             text =  text + "Dokładność klasyfikatora : " + accuracy + "%.\n";
-            text = text + "a \n b \n c \n d \n e \n f \n g \n";
             Utils.showToast(text, getApplicationContext());
 
             printOutput(text);
