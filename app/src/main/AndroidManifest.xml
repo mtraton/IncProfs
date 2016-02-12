@@ -251,15 +251,6 @@
         </provider>
 
 
-
-        <receiver
-            android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.BatteryListener"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.aware.ACTION_AWARE_BATTERY_CHANGED" />
-            </intent-filter>
-        </receiver>
-
         <receiver
             android:name="ai.ia.agh.edu.pl.workshop.incprofs.sensors.SensorsListener"
             android:exported="true">

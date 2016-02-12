@@ -113,7 +113,6 @@ public class LearningService extends Service {
         //Activate applications
         Log.d("AWARE", "Activate Apps");
         Aware.setSetting(this, Aware_Preferences.STATUS_APPLICATIONS, true);
-       // Aware.setSetting(this. Aware_Preferences.STATUS_APPLICATIONS, true);
         //Apply settings
         Log.d("AWARE", "Apply Apps settings");
         Aware.startSensor(this, Aware_Preferences.STATUS_APPLICATIONS);
@@ -183,7 +182,6 @@ public class LearningService extends Service {
         Aware.stopSensor(this, Aware_Preferences.STATUS_LOCATION_GPS);
         Aware.stopSensor(this, Aware_Preferences.STATUS_BATTERY);
         Aware.stopSensor(this, Aware_Preferences.STATUS_APPLICATIONS);
-        //02-11 10:17:54.832 25253-25253/ai.ia.agh.edu.pl.workshop.incprofs E/AWARE::Applications: Tried to unregister Applications receiver not registered.
         Aware.stopSensor(this, Aware_Preferences.STATUS_WIFI);
     }
 

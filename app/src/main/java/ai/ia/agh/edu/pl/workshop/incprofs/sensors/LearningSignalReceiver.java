@@ -28,8 +28,9 @@ public class LearningSignalReceiver extends BroadcastReceiver {
         //1.a Sprawdź czy plik istnieje
 
         if (inputDataFile.exists()) {
-            String fileContent = new Utils().readFile(inputDataFileName, c);
 
+            Utils utils = new Utils();
+            String fileContent = utils.readFile(inputDataFileName, c);
             // 2. Ucz się z pliku
             long startTime = System.currentTimeMillis();
 

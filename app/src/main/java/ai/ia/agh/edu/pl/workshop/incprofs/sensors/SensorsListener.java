@@ -26,26 +26,11 @@ import weka.core.Instances;
  */
 public class SensorsListener extends BroadcastReceiver {
 
-
-
-    LinkedHashMap<String, Object> sensorDataInstance = new LinkedHashMap<>(); //zapewnia kolejność "wsadzania" elementów
-
-    Profiles profiles;
-
-
-    //Cursors todo: wrzucić w jakąś strukturę danych
-    //todo : zrobić domyślne dane jak dla danego sensoru nie będziemy mieli danych na początku?
-    // todo: musimy pamiętać dwie próbki wstecz! DESC 2?
-    // todo: dodać wykrywanie z których sensorów możemy skorzystać
-
-    // todo : porównanie timestampów żeby określić, od kogo dostaliśmy najnowsze dane?
-
-    Cursor activityCursor;
-    String activity_name; // unknown, tilting, on_foot, in_vehicle, on_bicycle, running, walking
+    LinkedHashMap<String, Object> sensorDataInstance = new LinkedHashMap<>(); //zapewnia zachowaną kolejność dodawania elementów
 
     Cursor appCursor;
-    String application_name="";
-    String package_name="";
+    String application_name= "";
+    String package_name= "";
 
     Cursor batteryCursor;
     double battery_level = 0;
@@ -56,14 +41,11 @@ public class SensorsListener extends BroadcastReceiver {
     double double_longitude = 0.0;
 
     Cursor wifiCursor;
-    String ssid="";
+    String ssid= "";
 
     double timestamp = 0;
     double cursor_timestamp = 0; // wspólny dla wszystkich kursorów
 
-    String profile = "blank"; // todo: dodać automatyczne labelowanie
-
-    // pomysł - wszystko w jednym receiverze
 
     public void startCursors(Context c) {
         appCursor = c.getContentResolver().query(Applications_Provider.Applications_Foreground.CONTENT_URI, null, null, null,
@@ -149,17 +131,13 @@ public class SensorsListener extends BroadcastReceiver {
 
 
     public void onReceive(Context c, Intent intent) {
-        // Be sure to keep the work short inside onReceive(). Broadcasts need to return under 15 seconds, otherwise Android will interrupt it with ANR (Android Not Responding) messages.
-
-        Log.d("sensors", "Sensors Listener onReceive, intent: " + intent);
-
-
+      Log.d("sensors", "Sensors Listener onReceive, intent: " + intent);
         startCursors(c);
 
         timestamp = 0;
 
         getAppData();
-        getBatteryData(); // todo: bateria generuje za dużo eventów
+        getBatteryData();
         getGPSData();
         getWiFiData();
 
@@ -184,33 +162,22 @@ public class SensorsListener extends BroadcastReceiver {
 
     private void saveDataToHashMap() {
 
-        //todo: zabezpieczyć się przed pustymi danymi
-
-        sensorDataInstance.put("application_name", application_name);
-        sensorDataInstance.put("package_name", package_name);
+        sensorDataInstance.put("application_name", application_name.hashCode());
+        sensorDataInstance.put("package_name", package_name.hashCode());
         sensorDataInstance.put("battery_level", battery_level); // procentowy stopień naładowania baterii
         sensorDataInstance.put("double_latitude", double_latitude);
         sensorDataInstance.put("double_longitude", double_longitude);
-        sensorDataInstance.put("ssid", ssid);
+        sensorDataInstance.put("ssid", ssid.hashCode());
         sensorDataInstance.put("timestamp", new Utils().timeStampToDate(timestamp));
         sensorDataInstance.put("profile", chooseLabel(timestamp));
     }
 
-
-
-
-
     public String chooseLabel(double timestamp)
     {
         Date date = new Utils().timeStampToDate(timestamp);
-        //Calendar c = Calendar.getInstance();
-        //c.setTime(date);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // the format of your date
-        //sdf.setTimeZone(TimeZone.getTimeZone("GMT-4")); // give a timezone reference for formating (see comment at the bottom
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String formattedDate = sdf.format(date);
-        System.out.println(formattedDate);
-        int hour = date.getHours();//c.get(Calendar.HOUR_OF_DAY);
+        int hour = date.getHours();
 
         LinkedHashMap<Profiles.Day, String> profilesMap = new Profiles().getProfilesMap();
         if (hour >= 6 && hour < 8)

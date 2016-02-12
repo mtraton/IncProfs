@@ -34,6 +34,7 @@ public class DataToInstances {
     int numOfAttributes;
     int currentAttributeNum;
 
+    // Profiles
     Profiles profiles;
     ArrayList<String> profileNames;
 
@@ -45,7 +46,7 @@ public class DataToInstances {
         currentAttributeNum = 0;
         this.sensorData = sensorData;
         profiles = new Profiles();
-        profileNames= new ArrayList<String>(profiles.getProfilesMap().values());
+        profileNames= new ArrayList<>(profiles.getProfilesMap().values());
 
     }
 
@@ -65,7 +66,7 @@ public class DataToInstances {
                     if (value instanceof String) {
                         if(key.equals("profile"))
                         {
-
+                            // tworzenie atrybutu typu nominal
                             attributes.add(new Attribute(key, profileNames, attrNumber));
                             Log.d("IO", "nominal");
                         }
@@ -73,12 +74,10 @@ public class DataToInstances {
                             //żeby stworzyć atrybut typu String trzeba się posłużyć taką konstrukcją
                             attributes.add(new Attribute(key, (List<String>) null, attrNumber));
                         }
-
-
                     }
                     else if (value instanceof Date)
                     {
-                        attributes.add(new Attribute(key,"yyyy-MM-dd HH:mm:ss", attrNumber));//todo:możliwe źródło błędów
+                        attributes.add(new Attribute(key,"yyyy-MM-dd HH:mm:ss", attrNumber));
                     }
                    // jeśli dana nie jest żadnym z powyższych typów to musi być doublem -> atrybutem typu numeric
                     else {
@@ -86,7 +85,7 @@ public class DataToInstances {
                     }
 
                 }
-                else // todo: obsługa gdy dane są puste
+                else
                 {
                     attributes.add(new Attribute(""));
                     Log.d("IO", "null in sensor data at attribute creation");
@@ -96,20 +95,13 @@ public class DataToInstances {
         }
     }
 
-
-
-
-
     public Instances sensorDataToInstance() {
-
-        //if (sensorData != null) {
 
             createWekaAttributes();
             Instances data = new Instances("ProfileLearning", attributes, 0);
-            data.setClassIndex(numOfAttributes - 1);// TODO możliwe źródło błędów
+            data.setClassIndex(numOfAttributes - 1); // zakładamy, że ostatni atrybut jest klasą
         
-            double vals [] = new double[data.numAttributes()];
-            //newInstance = new DenseInstance(numOfAttributes);
+            double attributeValues [] = new double[data.numAttributes()];
 
             currentAttributeNum = 0;
             for (Map.Entry<String, Object> entry : sensorData.entrySet()) {
@@ -117,66 +109,48 @@ public class DataToInstances {
                 Object value = entry.getValue();
                 String key = entry.getKey();
 
-               
                 if (value != null) {
                     if (value instanceof String) {
                         if(key.equals("profile"))
                         {
                             // nominal attribute
-                            vals[currentAttributeNum] = profileNames.indexOf(value);
+                            attributeValues[currentAttributeNum] = profileNames.indexOf(value);
                         }
                         else
                         {
                             String stringValue = (String) value;
-
-                            //int attIndex = attributes.get(currentAttributeNum).index();
-                            //newInstance.setValue(attributes.get(currentAttributeNum), stringValue);
-                            // konwertuje tutaj przy ustawianiu string na double = 0
-
-                            vals[currentAttributeNum] = data.attribute(currentAttributeNum).addStringValue(stringValue);
-
+                            attributeValues[currentAttributeNum] = data.attribute(currentAttributeNum).addStringValue(stringValue);
                         }
 
                     }
                     else if (value instanceof Date)
                     {
                         Date date = (Date) value;
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // the format of your date
-                        //sdf.setTimeZone(TimeZone.getTimeZone("GMT-4")); // give a timezone reference for formating (see comment at the bottom
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         String formattedDate = sdf.format(date);
-
-
                         try {
-                            vals[currentAttributeNum] = data.attribute(currentAttributeNum).parseDate( formattedDate);
+                            attributeValues[currentAttributeNum] = data.attribute(currentAttributeNum).parseDate( formattedDate);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     }
-                    //musi i tak przekonwertować na double
-                    else {
-
-                        double doubleValue = (double) value;
-                        vals[currentAttributeNum] = doubleValue;
-
-                        //int attIndex = attributes.get(currentAttributeNum).index();
-                        //newInstance.setValue(attributes.get(currentAttributeNum), doubleValue);
+                    else if (value instanceof Integer)
+                    {
+                        double doubleValue = ((Integer) value).doubleValue();
+                        attributeValues[currentAttributeNum] = doubleValue;
                     }
-
-
-
+                    else {
+                        double doubleValue = (double) value;
+                        attributeValues[currentAttributeNum] = doubleValue;
+                    }
                 } else {
-                    Log.d("IO", "Sensor data part is null"); // // TODO: 08.02.2016  co jeśli dana jest nullem
-                    vals[currentAttributeNum] = Utils.missingValue();
+                    Log.d("IO", "Sensor data part is null");
+                    attributeValues[currentAttributeNum] = Utils.missingValue();
                 }
                 currentAttributeNum++;
-
             }
-            data.add(new DenseInstance(1.0, vals)); // todo: możliwe źródło błędu
+            data.add(new DenseInstance(1.0, attributeValues));
 
-
-
-
-        //todo: stringi reprezentowane jako zera - nie jest dobrze
         return data;
     }
 

@@ -24,7 +24,7 @@ public class EveryXTimeService extends Service {
     private static final String AMT_PING = "ai.ia.agh.edu.pl.workshop.incprofs.AlarmManagerPING";
     private PendingIntent AMT_PendingIntent;
     private Intent AMT_Intent = new Intent(AMT_PING);
-    private BroadcastReceiver AMT_BroadcastReceiver = new AlarmManagerReceiver();
+    private BroadcastReceiver AMT_BroadcastReceiver = new LearningSignalReceiver();
 
     private static int interval = 1000 * 60 * 2; // 1000 ms * 60 s * 2 = 2 min
 
@@ -49,15 +49,6 @@ public class EveryXTimeService extends Service {
                 interval,
                 AMT_PendingIntent);
 
-        /*
-        // Each and every 15 minutes will trigger onReceive of your BroadcastReceiver
-        ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setInexactRepeating(
-                AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis(),
-                AlarmManager.,      // 15min
-                //60*1000,      // 1min
-                AMT_PendingIntent);
-        */
 
         registerReceiver(AMT_BroadcastReceiver, new IntentFilter(AMT_PING));
     }
